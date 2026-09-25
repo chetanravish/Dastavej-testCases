@@ -1,0 +1,804 @@
+{
+  "info": {
+    "_postman_id": "a2d7769b-6926-4421-a1a5-4c61dbfd962b",
+    "name": "Dastavej Authentication API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "57212382",
+    "_collection_link": "https://go.postman.co/collection/57212382-a2d7769b-6926-4421-a1a5-4c61dbfd962b?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "API Regression",
+      "item": [
+        {
+          "name": "TC001_Register_Valid",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "const random = Math.floor(Math.random() * 100000);\r",
+                  "\r",
+                  "pm.environment.set(\"username\", `testuser${random}`);\r",
+                  "pm.environment.set(\"email\", `testuser${random}@gmail.com`);\r",
+                  "pm.environment.set(\"password\", \"Test@123\");"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 201\", () => {\r",
+                  "    pm.response.to.have.status(201);\r",
+                  "});\r",
+                  "\r",
+                  "const res = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Registration message is correct\", () => {\r",
+                  "    pm.expect(res.message).to.eql(\"User Created Successfully\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"User object exists\", () => {\r",
+                  "    pm.expect(res.user).to.be.an(\"object\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"User is initially unverified\", () => {\r",
+                  "    pm.expect(res.user.verified).to.eql(false);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response time is under 3 seconds\", () => {\r",
+                  "    pm.expect(pm.response.responseTime).to.be.below(3000);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"username\": \"{{username}}\",\r\n  \"email\": \"{{email}}\",\r\n  \"password\": \"{{password}}\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/register",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "register"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "TC002_Register_ExistingEmail",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 409\", () => {\r",
+                  "    pm.response.to.have.status(409);\r",
+                  "});\r",
+                  "\r",
+                  "const res = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Correct error message returned\", () => {\r",
+                  "    pm.expect(res.message).to.eql(\"Username or email already exist\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response time is under 3 seconds\", () => {\r",
+                  "    pm.expect(pm.response.responseTime).to.be.below(3000);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"username\": \"{{username}}\",\r\n  \"email\": \"{{email}}\",\r\n  \"password\": \"{{password}}\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/register",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "register"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "TC009_Login_Valid",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.environment.set(\"email\", \"shrnktest.io@gmail.com\");\r",
+                  "pm.environment.set(\"password\", \"test1234\");"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", () => {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "const res = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Login successful\", () => {\r",
+                  "    pm.expect(res.message).to.eql(\"Logged In Successfully\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Access token received\", () => {\r",
+                  "    pm.expect(res.accessToken).to.be.a(\"string\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response time under 3 seconds\", () => {\r",
+                  "    pm.expect(pm.response.responseTime).to.be.below(3000);\r",
+                  "});\r",
+                  "\r",
+                  "// Save token for next requests\r",
+                  "pm.environment.set(\"accessToken\", res.accessToken);"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"email\": \"{{email}}\",\r\n  \"password\": \"{{password}}\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "TC010_Login_WrongPassword",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 401\", () => {\r",
+                  "    pm.response.to.have.status(401);\r",
+                  "});\r",
+                  "\r",
+                  "const res = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Correct error message returned\", () => {\r",
+                  "    pm.expect(res.message).to.eql(\"invalid email or password \");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response time under 3 seconds\", () => {\r",
+                  "    pm.expect(pm.response.responseTime).to.be.below(3000);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"email\": \"{shrnktest.io@gmail.com}\",\r\n  \"password\": \"{wrongpassword}\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "TC011_Login_UnregisteredEmail",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 401\", () => {\r",
+                  "    pm.response.to.have.status(401);\r",
+                  "});\r",
+                  "\r",
+                  "const res = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Correct error message returned\", () => {\r",
+                  "    pm.expect(res.message).to.eql(\"invalid email or password \");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response time under 3 seconds\", () => {\r",
+                  "    pm.expect(pm.response.responseTime).to.be.below(3000);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"email\": \"{shrnktestu.io@gmail.com}\",\r\n  \"password\": \"{test1234}\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "TC018_GetMe",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", () => {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "const res = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"User object exists\", () => {\r",
+                  "    pm.expect(res.user).to.be.an(\"object\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Email matches logged in user\", () => {\r",
+                  "    pm.expect(res.user.email).to.eql(pm.environment.get(\"email\"));\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response time under 3 seconds\", () => {\r",
+                  "    pm.expect(pm.response.responseTime).to.be.below(3000);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/getme",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "getme"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "TC016_GetMe_NoToken",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 401\", () => {\r",
+                  "    pm.response.to.have.status(401);\r",
+                  "});\r",
+                  "\r",
+                  "const res = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Unauthorized message returned\", () => {\r",
+                  "    pm.expect(res.message).to.be.a(\"string\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response time under 3 seconds\", () => {\r",
+                  "    pm.expect(pm.response.responseTime).to.be.below(3000);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/getme",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "getme"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "TC019_RefreshToken",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", () => {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "const res = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"New access token received\", () => {\r",
+                  "    pm.expect(res.accessToken).to.be.a(\"string\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response time under 3 seconds\", () => {\r",
+                  "    pm.expect(pm.response.responseTime).to.be.below(3000);\r",
+                  "});\r",
+                  "\r",
+                  "// Update environment with fresh token\r",
+                  "pm.environment.set(\"accessToken\", res.accessToken);"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/refresh-token",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "refresh-token"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "TC014_Logout",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", () => {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "const res = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Logout successful\", () => {\r",
+                  "    pm.expect(res.message).to.eql(\"Logged Out Successfully\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response time under 3 seconds\", () => {\r",
+                  "    pm.expect(pm.response.responseTime).to.be.below(3000);\r",
+                  "});\r",
+                  "\r",
+                  "// Clear access token from environment\r",
+                  "pm.environment.unset(\"accessToken\");"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/logout",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "logout"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "TC020_RefreshToken_Invalid",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 401\", () => {\r",
+                  "    pm.response.to.have.status(401);\r",
+                  "});\r",
+                  "\r",
+                  "const res = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Refresh token rejected\", () => {\r",
+                  "    pm.expect(res.message).to.be.a(\"string\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response time under 3 seconds\", () => {\r",
+                  "    pm.expect(pm.response.responseTime).to.be.below(3000);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/refresh-token",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "refresh-token"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Manual UI Validation",
+      "item": [
+        {
+          "name": "TC003_Register_InvalidEmail (Frontend validation)",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": ""
+            },
+            "description": "# TC003 - Register with Invalid Email\n\n**Type:** StartFragmentUI Validation (Not Applicable for API)\n\nThis test is **not applicable for API testing**.\n\nEmail format validation is implemented in the React frontend using `input type=\"email\"`. The backend does not validate the email format, so this scenario is covered in Manual/UI testing only.\n\n**Manual Test Case:** TC003"
+          },
+          "response": []
+        },
+        {
+          "name": "TC005-008_OTP_Requests",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": ""
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "TC004_Register_WeakPassword (Frontend validation)",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": ""
+            },
+            "description": "# TC004 - Register with Weak Password\n\n**Type:** UI Validation (Not Applicable for API)\n\nThis test is not applicable for API testing.\n\nPassword length validation (minimum 8 characters) is implemented in the React frontend before the request is submitted. The backend does not enforce this validation, so this scenario is covered under Manual/UI testing only.\n\n**Manual Test Case:** TC004"
+          },
+          "response": []
+        },
+        {
+          "name": "TC012_Login_EmptyEmail (Frontend validation) Copy 2",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": ""
+            },
+            "description": "# TC012 – Login with Empty Password\n\n**Type:** UI Validation (Not Applicable for API)\n\n## Objective\n\nVerify that the application prevents login when the password field is left empty.\n\n## Why this is not automated in Postman\n\nThis validation is implemented in the React frontend before the API request is submitted. No request is sent to the backend.\n\n## Manual Steps\n\n1. Open the Login page.\n    \n2. Enter a valid registered email.\n    \n3. Leave the password field empty.\n    \n4. Click **Login**.\n    \n\n## Expected Result\n\n- Login request is blocked.\n    \n- A validation message is displayed for the password field.\n    \n- No API call is triggered.\n    \n\n**Manual Test Case:** TC012TC013 – Login with Empty Email\n\n**Type:** UI Validation (Not Applicable for API)\n\n## Objective\n\nVerify that the application prevents login when the email field is left empty.\n\n## Why this is not automated in Postman\n\nThis validation is handled by the React frontend and the browser before any API request is made.\n\n## Manual Steps\n\n1. Open the Login page.\n    \n2. Leave the email field empty.\n    \n3. Enter a valid password.\n    \n4. Click **Login**.\n    \n\n## Expected Result\n\n- Login request is blocked.\n    \n- A validation message is displayed for the email field.\n    \n- No API call is triggered.\n    \n\n**Manual Test Case:** TC013"
+          },
+          "response": []
+        },
+        {
+          "name": "TC013_Login_EmptyFields (Frontend validation) Copy",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": ""
+            },
+            "description": "# TC012 – Login with Empty Password\n\n**Type:** UI Validation (Not Applicable for API)\n\n## Objective\n\nVerify that the application prevents login when the password field is left empty.\n\n## Why this is not automated in Postman\n\nThis validation is implemented in the React frontend before the API request is submitted. No request is sent to the backend.\n\n## Manual Steps\n\n1. Open the Login page.\n    \n2. Enter a valid registered email.\n    \n3. Leave the password field empty.\n    \n4. Click **Login**.\n    \n\n## Expected Result\n\n- Login request is blocked.\n    \n- A validation message is displayed for the password field.\n    \n- No API call is triggered.\n    \n\n**Manual Test Case:** TC012"
+          },
+          "response": []
+        },
+        {
+          "name": "TC015_Browser_Back_AfterLogOut",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "description": "# TC015 – Browser Back After Logout\n\n**Type:** Manual Validation (UI + Session Security)\n\n## Objective\n\nVerify that a user cannot access the Dashboard by pressing the browser Back button after logging out.\n\n## Why this is not automated in Postman\n\nThis scenario depends on browser navigation history, protected routes, and session state. It is covered as a manual/UI test rather than a standalone API test.\n\n## Manual Steps\n\n1. Log in with a verified user.\n    \n2. Navigate to the Dashboard.\n    \n3. Click **Logout**.\n    \n4. Press the browser **Back** button.\n    \n\n## Expected Result\n\n- User is redirected to the Login/Home page.\n    \n- Dashboard is not displayed.\n    \n- The previous authenticated session cannot be restored using browser history.\n    \n\n**Manual Test Case:** TC015"
+          },
+          "response": []
+        },
+        {
+          "name": "TC017-Refresh-Dashboard",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": ""
+            },
+            "description": "# TC017 – Page Reload Session Persistence\n\n**Type:** Manual Validation (UI + API)\n\n## Objective\n\nVerify that reloading the application does not log out an authenticated user and the session is restored using the refresh token.\n\n## Why this is not automated in Postman\n\nThis scenario depends on browser behavior (page refresh, cookies, and React state restoration). It is covered as a manual/UI test rather than a standalone Postman API test.\n\n## Manual Steps\n\n1. Log in with a verified user.\n    \n2. Navigate to the Dashboard.\n    \n3. Refresh the browser page (F5 / Ctrl+R).\n    \n4. Verify the user remains logged in and the dashboard loads successfully.\n    \n\n## Expected Result\n\n- User session persists after reload.\n    \n- Dashboard is displayed without redirecting to Login.\n    \n- A new access token is obtained through the refresh token mechanism in the background.\n    \n\n**Manual Test Case:** TC017"
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

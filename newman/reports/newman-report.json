@@ -1,0 +1,4483 @@
+{
+  "collection": {
+    "_": {
+      "postman_id": "a2d7769b-6926-4421-a1a5-4c61dbfd962b",
+      "exporter_id": "57212382",
+      "collection_link": "https://go.postman.co/collection/57212382-a2d7769b-6926-4421-a1a5-4c61dbfd962b?source=collection_link"
+    },
+    "item": [
+      {
+        "id": "d760964f-6345-40bf-950b-d1f148299e46",
+        "name": "API Regression",
+        "item": [
+          {
+            "id": "15ba8b16-2e67-435d-b18b-fb9100a257d7",
+            "name": "TC001_Register_Valid",
+            "request": {
+              "url": {
+                "path": [
+                  "api",
+                  "auth",
+                  "register"
+                ],
+                "host": [
+                  "{{baseUrl}}"
+                ],
+                "query": [],
+                "variable": []
+              },
+              "method": "POST",
+              "body": {
+                "mode": "raw",
+                "raw": "{\r\n  \"username\": \"{{username}}\",\r\n  \"email\": \"{{email}}\",\r\n  \"password\": \"{{password}}\"\r\n}",
+                "options": {
+                  "raw": {
+                    "language": "json"
+                  }
+                }
+              }
+            },
+            "response": [],
+            "event": [
+              {
+                "listen": "prerequest",
+                "script": {
+                  "id": "8e18ae74-0dfd-476c-944c-d8d495b1463b",
+                  "type": "text/javascript",
+                  "packages": {},
+                  "exec": [
+                    "const random = Math.floor(Math.random() * 100000);\r",
+                    "\r",
+                    "pm.environment.set(\"username\", `testuser${random}`);\r",
+                    "pm.environment.set(\"email\", `testuser${random}@gmail.com`);\r",
+                    "pm.environment.set(\"password\", \"Test@123\");"
+                  ],
+                  "_lastExecutionId": "36712916-912c-4f0c-9e1c-cf5f624e0568"
+                }
+              },
+              {
+                "listen": "test",
+                "script": {
+                  "id": "295b4787-40ad-4686-be76-4c6484c28547",
+                  "type": "text/javascript",
+                  "packages": {},
+                  "exec": [
+                    "pm.test(\"Status code is 201\", () => {\r",
+                    "    pm.response.to.have.status(201);\r",
+                    "});\r",
+                    "\r",
+                    "const res = pm.response.json();\r",
+                    "\r",
+                    "pm.test(\"Registration message is correct\", () => {\r",
+                    "    pm.expect(res.message).to.eql(\"User Created Successfully\");\r",
+                    "});\r",
+                    "\r",
+                    "pm.test(\"User object exists\", () => {\r",
+                    "    pm.expect(res.user).to.be.an(\"object\");\r",
+                    "});\r",
+                    "\r",
+                    "pm.test(\"User is initially unverified\", () => {\r",
+                    "    pm.expect(res.user.verified).to.eql(false);\r",
+                    "});\r",
+                    "\r",
+                    "pm.test(\"Response time is under 3 seconds\", () => {\r",
+                    "    pm.expect(pm.response.responseTime).to.be.below(3000);\r",
+                    "});"
+                  ],
+                  "_lastExecutionId": "e3ee3907-d981-469b-b6bd-a8b66b752a57"
+                }
+              }
+            ]
+          },
+          {
+            "id": "cfcd75d1-9171-4996-8ee6-e101aed017c8",
+            "name": "TC002_Register_ExistingEmail",
+            "request": {
+              "url": {
+                "path": [
+                  "api",
+                  "auth",
+                  "register"
+                ],
+                "host": [
+                  "{{baseUrl}}"
+                ],
+                "query": [],
+                "variable": []
+              },
+              "method": "POST",
+              "body": {
+                "mode": "raw",
+                "raw": "{\r\n  \"username\": \"{{username}}\",\r\n  \"email\": \"{{email}}\",\r\n  \"password\": \"{{password}}\"\r\n}",
+                "options": {
+                  "raw": {
+                    "language": "json"
+                  }
+                }
+              }
+            },
+            "response": [],
+            "event": [
+              {
+                "listen": "prerequest",
+                "script": {
+                  "id": "e8b838a8-9ccd-46d3-b4a8-9ff3f9088bd0",
+                  "type": "text/javascript",
+                  "packages": {},
+                  "exec": [
+                    ""
+                  ],
+                  "_lastExecutionId": "264c9c9f-0351-45fc-9ac7-287f87b6d6b2"
+                }
+              },
+              {
+                "listen": "test",
+                "script": {
+                  "id": "f1f40ea1-0ce1-4cb8-95ee-3aa9c07ab35e",
+                  "type": "text/javascript",
+                  "packages": {},
+                  "exec": [
+                    "pm.test(\"Status code is 409\", () => {\r",
+                    "    pm.response.to.have.status(409);\r",
+                    "});\r",
+                    "\r",
+                    "const res = pm.response.json();\r",
+                    "\r",
+                    "pm.test(\"Correct error message returned\", () => {\r",
+                    "    pm.expect(res.message).to.eql(\"Username or email already exist\");\r",
+                    "});\r",
+                    "\r",
+                    "pm.test(\"Response time is under 3 seconds\", () => {\r",
+                    "    pm.expect(pm.response.responseTime).to.be.below(3000);\r",
+                    "});"
+                  ],
+                  "_lastExecutionId": "1ab21b3e-9e59-46e9-b470-8dceb3aaa142"
+                }
+              }
+            ]
+          },
+          {
+            "id": "0429903e-e65f-438f-9493-63472e1f965b",
+            "name": "TC009_Login_Valid",
+            "request": {
+              "url": {
+                "path": [
+                  "api",
+                  "auth",
+                  "login"
+                ],
+                "host": [
+                  "{{baseUrl}}"
+                ],
+                "query": [],
+                "variable": []
+              },
+              "method": "POST",
+              "body": {
+                "mode": "raw",
+                "raw": "{\r\n  \"email\": \"{{email}}\",\r\n  \"password\": \"{{password}}\"\r\n}",
+                "options": {
+                  "raw": {
+                    "language": "json"
+                  }
+                }
+              }
+            },
+            "response": [],
+            "event": [
+              {
+                "listen": "prerequest",
+                "script": {
+                  "id": "b787c86c-c03d-439d-9258-8577a0fb0008",
+                  "type": "text/javascript",
+                  "packages": {},
+                  "exec": [
+                    "pm.environment.set(\"email\", \"shrnktest.io@gmail.com\");\r",
+                    "pm.environment.set(\"password\", \"test1234\");"
+                  ],
+                  "_lastExecutionId": "016dc0d9-1ddd-4561-b086-b901bacb30f8"
+                }
+              },
+              {
+                "listen": "test",
+                "script": {
+                  "id": "72109f3c-3eed-49c8-b04e-0a183a912a41",
+                  "type": "text/javascript",
+                  "packages": {},
+                  "exec": [
+                    "pm.test(\"Status code is 200\", () => {\r",
+                    "    pm.response.to.have.status(200);\r",
+                    "});\r",
+                    "\r",
+                    "const res = pm.response.json();\r",
+                    "\r",
+                    "pm.test(\"Login successful\", () => {\r",
+                    "    pm.expect(res.message).to.eql(\"Logged In Successfully\");\r",
+                    "});\r",
+                    "\r",
+                    "pm.test(\"Access token received\", () => {\r",
+                    "    pm.expect(res.accessToken).to.be.a(\"string\");\r",
+                    "});\r",
+                    "\r",
+                    "pm.test(\"Response time under 3 seconds\", () => {\r",
+                    "    pm.expect(pm.response.responseTime).to.be.below(3000);\r",
+                    "});\r",
+                    "\r",
+                    "// Save token for next requests\r",
+                    "pm.environment.set(\"accessToken\", res.accessToken);"
+                  ],
+                  "_lastExecutionId": "be24db64-c841-4485-9cb4-41be275aba50"
+                }
+              }
+            ]
+          },
+          {
+            "id": "b7f89e28-5663-4e2e-a250-f9f085f024d5",
+            "name": "TC010_Login_WrongPassword",
+            "request": {
+              "url": {
+                "path": [
+                  "api",
+                  "auth",
+                  "login"
+                ],
+                "host": [
+                  "{{baseUrl}}"
+                ],
+                "query": [],
+                "variable": []
+              },
+              "method": "POST",
+              "body": {
+                "mode": "raw",
+                "raw": "{\r\n  \"email\": \"{shrnktest.io@gmail.com}\",\r\n  \"password\": \"{wrongpassword}\"\r\n}",
+                "options": {
+                  "raw": {
+                    "language": "json"
+                  }
+                }
+              }
+            },
+            "response": [],
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "id": "3532268b-9ffe-4c3e-8ec1-9d075aed148d",
+                  "type": "text/javascript",
+                  "packages": {},
+                  "exec": [
+                    "pm.test(\"Status code is 401\", () => {\r",
+                    "    pm.response.to.have.status(401);\r",
+                    "});\r",
+                    "\r",
+                    "const res = pm.response.json();\r",
+                    "\r",
+                    "pm.test(\"Correct error message returned\", () => {\r",
+                    "    pm.expect(res.message).to.eql(\"invalid email or password \");\r",
+                    "});\r",
+                    "\r",
+                    "pm.test(\"Response time under 3 seconds\", () => {\r",
+                    "    pm.expect(pm.response.responseTime).to.be.below(3000);\r",
+                    "});"
+                  ],
+                  "_lastExecutionId": "d4c672a5-a993-4ded-a5f3-277e1aed80c1"
+                }
+              }
+            ]
+          },
+          {
+            "id": "9a26c907-26ad-49bc-ab8a-0ec8cdd1fe96",
+            "name": "TC011_Login_UnregisteredEmail",
+            "request": {
+              "url": {
+                "path": [
+                  "api",
+                  "auth",
+                  "login"
+                ],
+                "host": [
+                  "{{baseUrl}}"
+                ],
+                "query": [],
+                "variable": []
+              },
+              "method": "POST",
+              "body": {
+                "mode": "raw",
+                "raw": "{\r\n  \"email\": \"{shrnktestu.io@gmail.com}\",\r\n  \"password\": \"{test1234}\"\r\n}",
+                "options": {
+                  "raw": {
+                    "language": "json"
+                  }
+                }
+              }
+            },
+            "response": [],
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "id": "f646926e-d1a0-4671-9c44-bfd73ddb6f6e",
+                  "type": "text/javascript",
+                  "packages": {},
+                  "exec": [
+                    "pm.test(\"Status code is 401\", () => {\r",
+                    "    pm.response.to.have.status(401);\r",
+                    "});\r",
+                    "\r",
+                    "const res = pm.response.json();\r",
+                    "\r",
+                    "pm.test(\"Correct error message returned\", () => {\r",
+                    "    pm.expect(res.message).to.eql(\"invalid email or password \");\r",
+                    "});\r",
+                    "\r",
+                    "pm.test(\"Response time under 3 seconds\", () => {\r",
+                    "    pm.expect(pm.response.responseTime).to.be.below(3000);\r",
+                    "});"
+                  ],
+                  "_lastExecutionId": "9ed4cbd0-f0d8-4eb5-97cd-142eb776aa52"
+                }
+              }
+            ]
+          },
+          {
+            "id": "fd821efe-b3b4-42c4-a61a-9f6f968c31e5",
+            "name": "TC018_GetMe",
+            "request": {
+              "url": {
+                "path": [
+                  "api",
+                  "auth",
+                  "getme"
+                ],
+                "host": [
+                  "{{baseUrl}}"
+                ],
+                "query": [],
+                "variable": []
+              },
+              "method": "GET",
+              "auth": {
+                "type": "bearer",
+                "bearer": [
+                  {
+                    "type": "string",
+                    "value": "{{accessToken}}",
+                    "key": "token"
+                  }
+                ]
+              }
+            },
+            "response": [],
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "id": "50cb3340-e30f-4f10-bd00-0c0bfa93b4b7",
+                  "type": "text/javascript",
+                  "packages": {},
+                  "exec": [
+                    "pm.test(\"Status code is 200\", () => {\r",
+                    "    pm.response.to.have.status(200);\r",
+                    "});\r",
+                    "\r",
+                    "const res = pm.response.json();\r",
+                    "\r",
+                    "pm.test(\"User object exists\", () => {\r",
+                    "    pm.expect(res.user).to.be.an(\"object\");\r",
+                    "});\r",
+                    "\r",
+                    "pm.test(\"Email matches logged in user\", () => {\r",
+                    "    pm.expect(res.user.email).to.eql(pm.environment.get(\"email\"));\r",
+                    "});\r",
+                    "\r",
+                    "pm.test(\"Response time under 3 seconds\", () => {\r",
+                    "    pm.expect(pm.response.responseTime).to.be.below(3000);\r",
+                    "});"
+                  ],
+                  "_lastExecutionId": "027ac5e9-00df-46f7-9025-8b9534d98ce0"
+                }
+              }
+            ]
+          },
+          {
+            "id": "c3aa5ba8-284f-48b1-81e0-4166aea71a48",
+            "name": "TC016_GetMe_NoToken",
+            "request": {
+              "url": {
+                "path": [
+                  "api",
+                  "auth",
+                  "getme"
+                ],
+                "host": [
+                  "{{baseUrl}}"
+                ],
+                "query": [],
+                "variable": []
+              },
+              "method": "GET",
+              "auth": {
+                "type": "noauth",
+                "noauth": []
+              }
+            },
+            "response": [],
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "id": "61d6ffae-fe22-47a6-963b-ed2a602241b6",
+                  "type": "text/javascript",
+                  "packages": {},
+                  "exec": [
+                    "pm.test(\"Status code is 401\", () => {\r",
+                    "    pm.response.to.have.status(401);\r",
+                    "});\r",
+                    "\r",
+                    "const res = pm.response.json();\r",
+                    "\r",
+                    "pm.test(\"Unauthorized message returned\", () => {\r",
+                    "    pm.expect(res.message).to.be.a(\"string\");\r",
+                    "});\r",
+                    "\r",
+                    "pm.test(\"Response time under 3 seconds\", () => {\r",
+                    "    pm.expect(pm.response.responseTime).to.be.below(3000);\r",
+                    "});"
+                  ],
+                  "_lastExecutionId": "6e3155ed-71ea-460e-9425-702192121bdf"
+                }
+              }
+            ]
+          },
+          {
+            "id": "eb4f2abc-c23b-4f49-b38a-233ab91bad73",
+            "name": "TC019_RefreshToken",
+            "request": {
+              "url": {
+                "path": [
+                  "api",
+                  "auth",
+                  "refresh-token"
+                ],
+                "host": [
+                  "{{baseUrl}}"
+                ],
+                "query": [],
+                "variable": []
+              },
+              "method": "POST"
+            },
+            "response": [],
+            "event": [
+              {
+                "listen": "prerequest",
+                "script": {
+                  "id": "cbf6ece5-7c06-4031-8685-e75a55f19845",
+                  "type": "text/javascript",
+                  "packages": {},
+                  "exec": [
+                    ""
+                  ],
+                  "_lastExecutionId": "09011ee4-35b3-43da-88d4-a8a6acbc15d2"
+                }
+              },
+              {
+                "listen": "test",
+                "script": {
+                  "id": "a12b8c7d-fa3f-4b23-847e-fafa6ba09ff4",
+                  "type": "text/javascript",
+                  "packages": {},
+                  "exec": [
+                    "pm.test(\"Status code is 200\", () => {\r",
+                    "    pm.response.to.have.status(200);\r",
+                    "});\r",
+                    "\r",
+                    "const res = pm.response.json();\r",
+                    "\r",
+                    "pm.test(\"New access token received\", () => {\r",
+                    "    pm.expect(res.accessToken).to.be.a(\"string\");\r",
+                    "});\r",
+                    "\r",
+                    "pm.test(\"Response time under 3 seconds\", () => {\r",
+                    "    pm.expect(pm.response.responseTime).to.be.below(3000);\r",
+                    "});\r",
+                    "\r",
+                    "// Update environment with fresh token\r",
+                    "pm.environment.set(\"accessToken\", res.accessToken);"
+                  ],
+                  "_lastExecutionId": "1a485eb4-2ffb-49da-91fa-0814b462c029"
+                }
+              }
+            ]
+          },
+          {
+            "id": "1fc2f7e8-cd68-4ab9-817a-437a42fd0ab0",
+            "name": "TC014_Logout",
+            "request": {
+              "url": {
+                "path": [
+                  "api",
+                  "auth",
+                  "logout"
+                ],
+                "host": [
+                  "{{baseUrl}}"
+                ],
+                "query": [],
+                "variable": []
+              },
+              "method": "GET"
+            },
+            "response": [],
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "id": "6fee6fc7-25e5-433d-8f7a-30e07305d784",
+                  "type": "text/javascript",
+                  "packages": {},
+                  "exec": [
+                    "pm.test(\"Status code is 200\", () => {\r",
+                    "    pm.response.to.have.status(200);\r",
+                    "});\r",
+                    "\r",
+                    "const res = pm.response.json();\r",
+                    "\r",
+                    "pm.test(\"Logout successful\", () => {\r",
+                    "    pm.expect(res.message).to.eql(\"Logged Out Successfully\");\r",
+                    "});\r",
+                    "\r",
+                    "pm.test(\"Response time under 3 seconds\", () => {\r",
+                    "    pm.expect(pm.response.responseTime).to.be.below(3000);\r",
+                    "});\r",
+                    "\r",
+                    "// Clear access token from environment\r",
+                    "pm.environment.unset(\"accessToken\");"
+                  ],
+                  "_lastExecutionId": "f85c10af-98b5-4a7e-be10-40270d5c4e82"
+                }
+              }
+            ]
+          },
+          {
+            "id": "246754e1-5de9-4d56-b0e0-4b949a70bf35",
+            "name": "TC020_RefreshToken_Invalid",
+            "request": {
+              "url": {
+                "path": [
+                  "api",
+                  "auth",
+                  "refresh-token"
+                ],
+                "host": [
+                  "{{baseUrl}}"
+                ],
+                "query": [],
+                "variable": []
+              },
+              "method": "POST"
+            },
+            "response": [],
+            "event": [
+              {
+                "listen": "prerequest",
+                "script": {
+                  "id": "04bded01-675c-4216-8614-c4e6d1402c09",
+                  "type": "text/javascript",
+                  "packages": {},
+                  "exec": [
+                    ""
+                  ],
+                  "_lastExecutionId": "c9e148c1-9137-480c-baf5-ec496ddfa2de"
+                }
+              },
+              {
+                "listen": "test",
+                "script": {
+                  "id": "bf13d7a4-bbf5-4e27-8fda-393dc50865e9",
+                  "type": "text/javascript",
+                  "packages": {},
+                  "exec": [
+                    "pm.test(\"Status code is 401\", () => {\r",
+                    "    pm.response.to.have.status(401);\r",
+                    "});\r",
+                    "\r",
+                    "const res = pm.response.json();\r",
+                    "\r",
+                    "pm.test(\"Refresh token rejected\", () => {\r",
+                    "    pm.expect(res.message).to.be.a(\"string\");\r",
+                    "});\r",
+                    "\r",
+                    "pm.test(\"Response time under 3 seconds\", () => {\r",
+                    "    pm.expect(pm.response.responseTime).to.be.below(3000);\r",
+                    "});"
+                  ],
+                  "_lastExecutionId": "157b8d95-f9c4-492a-8cbc-5755729bcff0"
+                }
+              }
+            ]
+          }
+        ],
+        "event": []
+      },
+      {
+        "id": "a45f3747-7ce3-49ab-ae82-b036c49a583c",
+        "name": "Manual UI Validation",
+        "item": [
+          {
+            "id": "e12d6c67-7a4d-4672-8319-2ae67ddb4c03",
+            "name": "TC003_Register_InvalidEmail (Frontend validation)",
+            "request": {
+              "description": {
+                "content": "# TC003 - Register with Invalid Email\n\n**Type:** StartFragmentUI Validation (Not Applicable for API)\n\nThis test is **not applicable for API testing**.\n\nEmail format validation is implemented in the React frontend using `input type=\"email\"`. The backend does not validate the email format, so this scenario is covered in Manual/UI testing only.\n\n**Manual Test Case:** TC003",
+                "type": "text/plain"
+              },
+              "url": {
+                "query": [],
+                "variable": []
+              },
+              "method": "POST"
+            },
+            "response": [],
+            "event": [
+              {
+                "listen": "prerequest",
+                "script": {
+                  "id": "f6192d8e-0ba7-48c3-b983-37d618f50553",
+                  "type": "text/javascript",
+                  "packages": {},
+                  "exec": [
+                    ""
+                  ]
+                }
+              },
+              {
+                "listen": "test",
+                "script": {
+                  "id": "610940fd-768b-4e44-bed4-cb3f3c564e0a",
+                  "type": "text/javascript",
+                  "packages": {},
+                  "exec": [
+                    ""
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "id": "cd0e4b4c-c42e-4c6f-a4d4-bbca452c2b8f",
+            "name": "TC005-008_OTP_Requests",
+            "request": {
+              "url": {
+                "query": [],
+                "variable": []
+              },
+              "method": "POST"
+            },
+            "response": [],
+            "event": [
+              {
+                "listen": "prerequest",
+                "script": {
+                  "id": "0b008a65-8659-4bfa-a525-35f8e0acbebd",
+                  "type": "text/javascript",
+                  "packages": {},
+                  "exec": [
+                    ""
+                  ]
+                }
+              },
+              {
+                "listen": "test",
+                "script": {
+                  "id": "28aeb266-9a61-4ce7-b57b-c19f7bb0f529",
+                  "type": "text/javascript",
+                  "packages": {},
+                  "exec": [
+                    ""
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "id": "63b93f7f-b9ee-4ea5-8968-c933b39aeb06",
+            "name": "TC004_Register_WeakPassword (Frontend validation)",
+            "request": {
+              "description": {
+                "content": "# TC004 - Register with Weak Password\n\n**Type:** UI Validation (Not Applicable for API)\n\nThis test is not applicable for API testing.\n\nPassword length validation (minimum 8 characters) is implemented in the React frontend before the request is submitted. The backend does not enforce this validation, so this scenario is covered under Manual/UI testing only.\n\n**Manual Test Case:** TC004",
+                "type": "text/plain"
+              },
+              "url": {
+                "query": [],
+                "variable": []
+              },
+              "method": "POST"
+            },
+            "response": [],
+            "event": [
+              {
+                "listen": "prerequest",
+                "script": {
+                  "id": "95df0dc9-a420-4d0a-9184-1ac9e92345d7",
+                  "type": "text/javascript",
+                  "packages": {},
+                  "exec": [
+                    ""
+                  ]
+                }
+              },
+              {
+                "listen": "test",
+                "script": {
+                  "id": "a26c9d86-6031-4311-a256-768b5940c531",
+                  "type": "text/javascript",
+                  "packages": {},
+                  "exec": [
+                    ""
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "id": "410c5f5b-4c7d-4054-ad32-0f17349413ed",
+            "name": "TC012_Login_EmptyEmail (Frontend validation) Copy 2",
+            "request": {
+              "description": {
+                "content": "# TC012 – Login with Empty Password\n\n**Type:** UI Validation (Not Applicable for API)\n\n## Objective\n\nVerify that the application prevents login when the password field is left empty.\n\n## Why this is not automated in Postman\n\nThis validation is implemented in the React frontend before the API request is submitted. No request is sent to the backend.\n\n## Manual Steps\n\n1. Open the Login page.\n    \n2. Enter a valid registered email.\n    \n3. Leave the password field empty.\n    \n4. Click **Login**.\n    \n\n## Expected Result\n\n- Login request is blocked.\n    \n- A validation message is displayed for the password field.\n    \n- No API call is triggered.\n    \n\n**Manual Test Case:** TC012TC013 – Login with Empty Email\n\n**Type:** UI Validation (Not Applicable for API)\n\n## Objective\n\nVerify that the application prevents login when the email field is left empty.\n\n## Why this is not automated in Postman\n\nThis validation is handled by the React frontend and the browser before any API request is made.\n\n## Manual Steps\n\n1. Open the Login page.\n    \n2. Leave the email field empty.\n    \n3. Enter a valid password.\n    \n4. Click **Login**.\n    \n\n## Expected Result\n\n- Login request is blocked.\n    \n- A validation message is displayed for the email field.\n    \n- No API call is triggered.\n    \n\n**Manual Test Case:** TC013",
+                "type": "text/plain"
+              },
+              "url": {
+                "query": [],
+                "variable": []
+              },
+              "method": "POST"
+            },
+            "response": [],
+            "event": [
+              {
+                "listen": "prerequest",
+                "script": {
+                  "id": "6b731a16-27a1-4275-b4e8-097e1601fa90",
+                  "type": "text/javascript",
+                  "packages": {},
+                  "exec": [
+                    ""
+                  ]
+                }
+              },
+              {
+                "listen": "test",
+                "script": {
+                  "id": "d14116d5-29ae-46c5-ae0d-f952ba0b4994",
+                  "type": "text/javascript",
+                  "packages": {},
+                  "exec": [
+                    ""
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "id": "35608c12-2b99-40eb-842d-8784176bb243",
+            "name": "TC013_Login_EmptyFields (Frontend validation) Copy",
+            "request": {
+              "description": {
+                "content": "# TC012 – Login with Empty Password\n\n**Type:** UI Validation (Not Applicable for API)\n\n## Objective\n\nVerify that the application prevents login when the password field is left empty.\n\n## Why this is not automated in Postman\n\nThis validation is implemented in the React frontend before the API request is submitted. No request is sent to the backend.\n\n## Manual Steps\n\n1. Open the Login page.\n    \n2. Enter a valid registered email.\n    \n3. Leave the password field empty.\n    \n4. Click **Login**.\n    \n\n## Expected Result\n\n- Login request is blocked.\n    \n- A validation message is displayed for the password field.\n    \n- No API call is triggered.\n    \n\n**Manual Test Case:** TC012",
+                "type": "text/plain"
+              },
+              "url": {
+                "query": [],
+                "variable": []
+              },
+              "method": "POST"
+            },
+            "response": [],
+            "event": [
+              {
+                "listen": "prerequest",
+                "script": {
+                  "id": "a0e87523-8d3e-4476-8050-a6dc8fcc20f0",
+                  "type": "text/javascript",
+                  "packages": {},
+                  "exec": [
+                    ""
+                  ]
+                }
+              },
+              {
+                "listen": "test",
+                "script": {
+                  "id": "417cf01a-3461-4998-a98a-0ed65e259219",
+                  "type": "text/javascript",
+                  "packages": {},
+                  "exec": [
+                    ""
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "id": "a08fc65e-e214-455f-9a76-6bcac29904e1",
+            "name": "TC015_Browser_Back_AfterLogOut",
+            "request": {
+              "description": {
+                "content": "# TC015 – Browser Back After Logout\n\n**Type:** Manual Validation (UI + Session Security)\n\n## Objective\n\nVerify that a user cannot access the Dashboard by pressing the browser Back button after logging out.\n\n## Why this is not automated in Postman\n\nThis scenario depends on browser navigation history, protected routes, and session state. It is covered as a manual/UI test rather than a standalone API test.\n\n## Manual Steps\n\n1. Log in with a verified user.\n    \n2. Navigate to the Dashboard.\n    \n3. Click **Logout**.\n    \n4. Press the browser **Back** button.\n    \n\n## Expected Result\n\n- User is redirected to the Login/Home page.\n    \n- Dashboard is not displayed.\n    \n- The previous authenticated session cannot be restored using browser history.\n    \n\n**Manual Test Case:** TC015",
+                "type": "text/plain"
+              },
+              "url": {
+                "query": [],
+                "variable": []
+              },
+              "method": "GET"
+            },
+            "response": [],
+            "event": []
+          },
+          {
+            "id": "01b03f92-f2a2-454d-afb6-c675d32a6b97",
+            "name": "TC017-Refresh-Dashboard",
+            "request": {
+              "description": {
+                "content": "# TC017 – Page Reload Session Persistence\n\n**Type:** Manual Validation (UI + API)\n\n## Objective\n\nVerify that reloading the application does not log out an authenticated user and the session is restored using the refresh token.\n\n## Why this is not automated in Postman\n\nThis scenario depends on browser behavior (page refresh, cookies, and React state restoration). It is covered as a manual/UI test rather than a standalone Postman API test.\n\n## Manual Steps\n\n1. Log in with a verified user.\n    \n2. Navigate to the Dashboard.\n    \n3. Refresh the browser page (F5 / Ctrl+R).\n    \n4. Verify the user remains logged in and the dashboard loads successfully.\n    \n\n## Expected Result\n\n- User session persists after reload.\n    \n- Dashboard is displayed without redirecting to Login.\n    \n- A new access token is obtained through the refresh token mechanism in the background.\n    \n\n**Manual Test Case:** TC017",
+                "type": "text/plain"
+              },
+              "url": {
+                "query": [],
+                "variable": []
+              },
+              "method": "POST"
+            },
+            "response": [],
+            "event": []
+          }
+        ],
+        "event": []
+      }
+    ],
+    "event": [],
+    "variable": [],
+    "info": {
+      "_postman_id": "a2d7769b-6926-4421-a1a5-4c61dbfd962b",
+      "name": "Dastavej Authentication API",
+      "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    }
+  },
+  "environment": {
+    "_": {
+      "postman_variable_scope": "environment",
+      "postman_exported_at": "2026-09-25T13:18:11.313Z",
+      "postman_exported_using": "Postman/12.27.0"
+    },
+    "id": "8227513e-fdc4-4073-b884-4713f7d4ca6c",
+    "name": "Dastavej Production",
+    "values": [
+      {
+        "type": "any",
+        "value": "https://dastavej-familyvault.onrender.com",
+        "key": "baseUrl"
+      },
+      {
+        "type": "any",
+        "value": "shrnktest.io@gmail.com",
+        "key": "email"
+      },
+      {
+        "type": "any",
+        "value": "testuser88757",
+        "key": "username"
+      },
+      {
+        "type": "any",
+        "value": "test1234",
+        "key": "password"
+      }
+    ]
+  },
+  "globals": {
+    "id": "c7fe43da-9658-4e27-b4ac-fd5bbbbf0c63",
+    "values": []
+  },
+  "run": {
+    "stats": {
+      "iterations": {
+        "total": 1,
+        "pending": 0,
+        "failed": 0
+      },
+      "items": {
+        "total": 10,
+        "pending": 0,
+        "failed": 0
+      },
+      "scripts": {
+        "total": 15,
+        "pending": 0,
+        "failed": 0
+      },
+      "prerequests": {
+        "total": 10,
+        "pending": 0,
+        "failed": 0
+      },
+      "requests": {
+        "total": 10,
+        "pending": 0,
+        "failed": 0
+      },
+      "tests": {
+        "total": 10,
+        "pending": 0,
+        "failed": 0
+      },
+      "assertions": {
+        "total": 34,
+        "pending": 0,
+        "failed": 0
+      },
+      "testScripts": {
+        "total": 10,
+        "pending": 0,
+        "failed": 0
+      },
+      "prerequestScripts": {
+        "total": 5,
+        "pending": 0,
+        "failed": 0
+      }
+    },
+    "timings": {
+      "responseAverage": 851.3,
+      "responseMin": 301,
+      "responseMax": 2269,
+      "responseSd": 545.2278514529498,
+      "dnsAverage": 0,
+      "dnsMin": 0,
+      "dnsMax": 0,
+      "dnsSd": 0,
+      "firstByteAverage": 0,
+      "firstByteMin": 0,
+      "firstByteMax": 0,
+      "firstByteSd": 0,
+      "started": 1790344446865,
+      "completed": 1790344456892
+    },
+    "executions": [
+      {
+        "cursor": {
+          "position": 0,
+          "iteration": 0,
+          "length": 10,
+          "cycles": 1,
+          "empty": false,
+          "eof": false,
+          "bof": true,
+          "cr": false,
+          "ref": "4ba5532c-5be1-42fa-8c83-34d51d862d87",
+          "httpRequestId": "814aa72a-46cd-4436-8382-c5bd23ecefb1"
+        },
+        "item": {
+          "id": "15ba8b16-2e67-435d-b18b-fb9100a257d7",
+          "name": "TC001_Register_Valid",
+          "request": {
+            "url": {
+              "path": [
+                "api",
+                "auth",
+                "register"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"username\": \"{{username}}\",\r\n  \"email\": \"{{email}}\",\r\n  \"password\": \"{{password}}\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "id": "8e18ae74-0dfd-476c-944c-d8d495b1463b",
+                "type": "text/javascript",
+                "packages": {},
+                "exec": [
+                  "const random = Math.floor(Math.random() * 100000);\r",
+                  "\r",
+                  "pm.environment.set(\"username\", `testuser${random}`);\r",
+                  "pm.environment.set(\"email\", `testuser${random}@gmail.com`);\r",
+                  "pm.environment.set(\"password\", \"Test@123\");"
+                ],
+                "_lastExecutionId": "36712916-912c-4f0c-9e1c-cf5f624e0568"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "id": "295b4787-40ad-4686-be76-4c6484c28547",
+                "type": "text/javascript",
+                "packages": {},
+                "exec": [
+                  "pm.test(\"Status code is 201\", () => {\r",
+                  "    pm.response.to.have.status(201);\r",
+                  "});\r",
+                  "\r",
+                  "const res = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Registration message is correct\", () => {\r",
+                  "    pm.expect(res.message).to.eql(\"User Created Successfully\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"User object exists\", () => {\r",
+                  "    pm.expect(res.user).to.be.an(\"object\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"User is initially unverified\", () => {\r",
+                  "    pm.expect(res.user.verified).to.eql(false);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response time is under 3 seconds\", () => {\r",
+                  "    pm.expect(pm.response.responseTime).to.be.below(3000);\r",
+                  "});"
+                ],
+                "_lastExecutionId": "e3ee3907-d981-469b-b6bd-a8b66b752a57"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "https",
+            "path": [
+              "api",
+              "auth",
+              "register"
+            ],
+            "host": [
+              "dastavej-familyvault",
+              "onrender",
+              "com"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json",
+              "system": true
+            },
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.39.1",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "30fa6ede-f72d-4313-a1ab-b2b512ac8908",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "dastavej-familyvault.onrender.com",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            },
+            {
+              "key": "Content-Length",
+              "value": "101",
+              "system": true
+            }
+          ],
+          "method": "POST",
+          "body": {
+            "mode": "raw",
+            "raw": "{\r\n  \"username\": \"testuser88757\",\r\n  \"email\": \"testuser88757@gmail.com\",\r\n  \"password\": \"Test@123\"\r\n}",
+            "options": {
+              "raw": {
+                "language": "json"
+              }
+            }
+          }
+        },
+        "response": {
+          "id": "d263b483-86a1-4d25-9005-56511cd79681",
+          "status": "Created",
+          "code": 201,
+          "header": [
+            {
+              "key": "Date",
+              "value": "Fri, 25 Sep 2026 13:54:22 GMT"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            },
+            {
+              "key": "Content-Length",
+              "value": "101"
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "access-control-allow-credentials",
+              "value": "true"
+            },
+            {
+              "key": "Content-Encoding",
+              "value": "br"
+            },
+            {
+              "key": "etag",
+              "value": "W/\"7e-QhI93TkHyLl4lvSTrF19pIfQ5YY\""
+            },
+            {
+              "key": "rndr-id",
+              "value": "bddfc7f9-75a3-49fe"
+            },
+            {
+              "key": "Server",
+              "value": "cloudflare"
+            },
+            {
+              "key": "vary",
+              "value": "Origin"
+            },
+            {
+              "key": "vary",
+              "value": "Accept-Encoding"
+            },
+            {
+              "key": "x-powered-by",
+              "value": "Express"
+            },
+            {
+              "key": "x-render-origin-server",
+              "value": "Render"
+            },
+            {
+              "key": "cf-cache-status",
+              "value": "DYNAMIC"
+            },
+            {
+              "key": "CF-RAY",
+              "value": "a40a852d486f3750-DEL"
+            },
+            {
+              "key": "alt-svc",
+              "value": "h3=\":443\"; ma=86400"
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              123,
+              34,
+              109,
+              101,
+              115,
+              115,
+              97,
+              103,
+              101,
+              34,
+              58,
+              34,
+              85,
+              115,
+              101,
+              114,
+              32,
+              67,
+              114,
+              101,
+              97,
+              116,
+              101,
+              100,
+              32,
+              83,
+              117,
+              99,
+              99,
+              101,
+              115,
+              115,
+              102,
+              117,
+              108,
+              108,
+              121,
+              34,
+              44,
+              34,
+              117,
+              115,
+              101,
+              114,
+              34,
+              58,
+              123,
+              34,
+              117,
+              115,
+              101,
+              114,
+              110,
+              97,
+              109,
+              101,
+              34,
+              58,
+              34,
+              116,
+              101,
+              115,
+              116,
+              117,
+              115,
+              101,
+              114,
+              56,
+              56,
+              55,
+              53,
+              55,
+              34,
+              44,
+              34,
+              101,
+              109,
+              97,
+              105,
+              108,
+              34,
+              58,
+              34,
+              116,
+              101,
+              115,
+              116,
+              117,
+              115,
+              101,
+              114,
+              56,
+              56,
+              55,
+              53,
+              55,
+              64,
+              103,
+              109,
+              97,
+              105,
+              108,
+              46,
+              99,
+              111,
+              109,
+              34,
+              44,
+              34,
+              118,
+              101,
+              114,
+              105,
+              102,
+              105,
+              101,
+              100,
+              34,
+              58,
+              102,
+              97,
+              108,
+              115,
+              101,
+              125,
+              125
+            ]
+          },
+          "cookie": [],
+          "responseTime": 2269,
+          "responseSize": 126
+        },
+        "id": "15ba8b16-2e67-435d-b18b-fb9100a257d7",
+        "assertions": [
+          {
+            "assertion": "Status code is 201",
+            "skipped": false
+          },
+          {
+            "assertion": "Registration message is correct",
+            "skipped": false
+          },
+          {
+            "assertion": "User object exists",
+            "skipped": false
+          },
+          {
+            "assertion": "User is initially unverified",
+            "skipped": false
+          },
+          {
+            "assertion": "Response time is under 3 seconds",
+            "skipped": false
+          }
+        ]
+      },
+      {
+        "cursor": {
+          "ref": "e47c4054-5276-4ad0-aaf3-c7f134ea687c",
+          "length": 10,
+          "cycles": 1,
+          "position": 1,
+          "iteration": 0,
+          "httpRequestId": "a7e4426a-4783-46e4-baf5-4513eafe1eb4"
+        },
+        "item": {
+          "id": "cfcd75d1-9171-4996-8ee6-e101aed017c8",
+          "name": "TC002_Register_ExistingEmail",
+          "request": {
+            "url": {
+              "path": [
+                "api",
+                "auth",
+                "register"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"username\": \"{{username}}\",\r\n  \"email\": \"{{email}}\",\r\n  \"password\": \"{{password}}\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "id": "e8b838a8-9ccd-46d3-b4a8-9ff3f9088bd0",
+                "type": "text/javascript",
+                "packages": {},
+                "exec": [
+                  ""
+                ],
+                "_lastExecutionId": "264c9c9f-0351-45fc-9ac7-287f87b6d6b2"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "id": "f1f40ea1-0ce1-4cb8-95ee-3aa9c07ab35e",
+                "type": "text/javascript",
+                "packages": {},
+                "exec": [
+                  "pm.test(\"Status code is 409\", () => {\r",
+                  "    pm.response.to.have.status(409);\r",
+                  "});\r",
+                  "\r",
+                  "const res = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Correct error message returned\", () => {\r",
+                  "    pm.expect(res.message).to.eql(\"Username or email already exist\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response time is under 3 seconds\", () => {\r",
+                  "    pm.expect(pm.response.responseTime).to.be.below(3000);\r",
+                  "});"
+                ],
+                "_lastExecutionId": "1ab21b3e-9e59-46e9-b470-8dceb3aaa142"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "https",
+            "path": [
+              "api",
+              "auth",
+              "register"
+            ],
+            "host": [
+              "dastavej-familyvault",
+              "onrender",
+              "com"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json",
+              "system": true
+            },
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.39.1",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "016942a5-962d-4dc3-a78f-85971514f589",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "dastavej-familyvault.onrender.com",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            },
+            {
+              "key": "Content-Length",
+              "value": "101",
+              "system": true
+            }
+          ],
+          "method": "POST",
+          "body": {
+            "mode": "raw",
+            "raw": "{\r\n  \"username\": \"testuser88757\",\r\n  \"email\": \"testuser88757@gmail.com\",\r\n  \"password\": \"Test@123\"\r\n}",
+            "options": {
+              "raw": {
+                "language": "json"
+              }
+            }
+          }
+        },
+        "response": {
+          "id": "5c2e7362-a5db-453a-a4af-c01912839382",
+          "status": "Conflict",
+          "code": 409,
+          "header": [
+            {
+              "key": "Date",
+              "value": "Fri, 25 Sep 2026 13:54:23 GMT"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            },
+            {
+              "key": "Content-Length",
+              "value": "47"
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "access-control-allow-credentials",
+              "value": "true"
+            },
+            {
+              "key": "Content-Encoding",
+              "value": "br"
+            },
+            {
+              "key": "etag",
+              "value": "W/\"2d-tq/Rze+ld5eoRRotQwXWyto668c\""
+            },
+            {
+              "key": "rndr-id",
+              "value": "2de5efad-9776-4cf2"
+            },
+            {
+              "key": "Server",
+              "value": "cloudflare"
+            },
+            {
+              "key": "vary",
+              "value": "Origin"
+            },
+            {
+              "key": "vary",
+              "value": "Accept-Encoding"
+            },
+            {
+              "key": "x-powered-by",
+              "value": "Express"
+            },
+            {
+              "key": "x-render-origin-server",
+              "value": "Render"
+            },
+            {
+              "key": "cf-cache-status",
+              "value": "DYNAMIC"
+            },
+            {
+              "key": "CF-RAY",
+              "value": "a40a853b8a863750-DEL"
+            },
+            {
+              "key": "alt-svc",
+              "value": "h3=\":443\"; ma=86400"
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              123,
+              34,
+              109,
+              101,
+              115,
+              115,
+              97,
+              103,
+              101,
+              34,
+              58,
+              34,
+              85,
+              115,
+              101,
+              114,
+              110,
+              97,
+              109,
+              101,
+              32,
+              111,
+              114,
+              32,
+              101,
+              109,
+              97,
+              105,
+              108,
+              32,
+              97,
+              108,
+              114,
+              101,
+              97,
+              100,
+              121,
+              32,
+              101,
+              120,
+              105,
+              115,
+              116,
+              34,
+              125
+            ]
+          },
+          "cookie": [],
+          "responseTime": 1035,
+          "responseSize": 45
+        },
+        "id": "cfcd75d1-9171-4996-8ee6-e101aed017c8",
+        "assertions": [
+          {
+            "assertion": "Status code is 409",
+            "skipped": false
+          },
+          {
+            "assertion": "Correct error message returned",
+            "skipped": false
+          },
+          {
+            "assertion": "Response time is under 3 seconds",
+            "skipped": false
+          }
+        ]
+      },
+      {
+        "cursor": {
+          "ref": "6cabb8b1-0ac9-4e3a-9d81-2f401aaec0df",
+          "length": 10,
+          "cycles": 1,
+          "position": 2,
+          "iteration": 0,
+          "httpRequestId": "538477dc-fdcd-40e6-8b33-71d341ee3f5a"
+        },
+        "item": {
+          "id": "0429903e-e65f-438f-9493-63472e1f965b",
+          "name": "TC009_Login_Valid",
+          "request": {
+            "url": {
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"email\": \"{{email}}\",\r\n  \"password\": \"{{password}}\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "id": "b787c86c-c03d-439d-9258-8577a0fb0008",
+                "type": "text/javascript",
+                "packages": {},
+                "exec": [
+                  "pm.environment.set(\"email\", \"shrnktest.io@gmail.com\");\r",
+                  "pm.environment.set(\"password\", \"test1234\");"
+                ],
+                "_lastExecutionId": "016dc0d9-1ddd-4561-b086-b901bacb30f8"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "id": "72109f3c-3eed-49c8-b04e-0a183a912a41",
+                "type": "text/javascript",
+                "packages": {},
+                "exec": [
+                  "pm.test(\"Status code is 200\", () => {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "const res = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Login successful\", () => {\r",
+                  "    pm.expect(res.message).to.eql(\"Logged In Successfully\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Access token received\", () => {\r",
+                  "    pm.expect(res.accessToken).to.be.a(\"string\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response time under 3 seconds\", () => {\r",
+                  "    pm.expect(pm.response.responseTime).to.be.below(3000);\r",
+                  "});\r",
+                  "\r",
+                  "// Save token for next requests\r",
+                  "pm.environment.set(\"accessToken\", res.accessToken);"
+                ],
+                "_lastExecutionId": "be24db64-c841-4485-9cb4-41be275aba50"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "https",
+            "path": [
+              "api",
+              "auth",
+              "login"
+            ],
+            "host": [
+              "dastavej-familyvault",
+              "onrender",
+              "com"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json",
+              "system": true
+            },
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.39.1",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "2c79c519-7309-449b-87cf-e770f381cfae",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "dastavej-familyvault.onrender.com",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            },
+            {
+              "key": "Content-Length",
+              "value": "68",
+              "system": true
+            }
+          ],
+          "method": "POST",
+          "body": {
+            "mode": "raw",
+            "raw": "{\r\n  \"email\": \"shrnktest.io@gmail.com\",\r\n  \"password\": \"test1234\"\r\n}",
+            "options": {
+              "raw": {
+                "language": "json"
+              }
+            }
+          }
+        },
+        "response": {
+          "id": "2ee7444e-26a3-4357-a3d3-08617f0ca047",
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Date",
+              "value": "Fri, 25 Sep 2026 13:54:24 GMT"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            },
+            {
+              "key": "Content-Length",
+              "value": "283"
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "access-control-allow-credentials",
+              "value": "true"
+            },
+            {
+              "key": "Content-Encoding",
+              "value": "br"
+            },
+            {
+              "key": "etag",
+              "value": "W/\"153-rV5j+7LwqaNSjsKlsyToHDW/eGc\""
+            },
+            {
+              "key": "rndr-id",
+              "value": "928065c0-34ae-46a0"
+            },
+            {
+              "key": "Server",
+              "value": "cloudflare"
+            },
+            {
+              "key": "Set-Cookie",
+              "value": "refreshToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhYjY2MGQ5NDVlMzNjNzMwNGMxNmRlMCIsImlhdCI6MTc5MDM0NDQ2NCwiZXhwIjoxNzkwOTQ5MjY0fQ.991YmGYfoknK9YHY5vO_DqkItltu6GOMZQwZdNi_QCQ; Max-Age=604800; Path=/; Expires=Fri, 02 Oct 2026 13:54:24 GMT; HttpOnly; Secure; SameSite=None"
+            },
+            {
+              "key": "vary",
+              "value": "Origin"
+            },
+            {
+              "key": "vary",
+              "value": "Accept-Encoding"
+            },
+            {
+              "key": "x-powered-by",
+              "value": "Express"
+            },
+            {
+              "key": "x-render-origin-server",
+              "value": "Render"
+            },
+            {
+              "key": "cf-cache-status",
+              "value": "DYNAMIC"
+            },
+            {
+              "key": "CF-RAY",
+              "value": "a40a85429eaf3750-DEL"
+            },
+            {
+              "key": "alt-svc",
+              "value": "h3=\":443\"; ma=86400"
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              123,
+              34,
+              109,
+              101,
+              115,
+              115,
+              97,
+              103,
+              101,
+              34,
+              58,
+              34,
+              76,
+              111,
+              103,
+              103,
+              101,
+              100,
+              32,
+              73,
+              110,
+              32,
+              83,
+              117,
+              99,
+              99,
+              101,
+              115,
+              115,
+              102,
+              117,
+              108,
+              108,
+              121,
+              34,
+              44,
+              34,
+              117,
+              115,
+              101,
+              114,
+              34,
+              58,
+              123,
+              34,
+              117,
+              115,
+              101,
+              114,
+              110,
+              97,
+              109,
+              101,
+              34,
+              58,
+              34,
+              116,
+              101,
+              115,
+              116,
+              49,
+              50,
+              51,
+              34,
+              44,
+              34,
+              101,
+              109,
+              97,
+              105,
+              108,
+              34,
+              58,
+              34,
+              115,
+              104,
+              114,
+              110,
+              107,
+              116,
+              101,
+              115,
+              116,
+              46,
+              105,
+              111,
+              64,
+              103,
+              109,
+              97,
+              105,
+              108,
+              46,
+              99,
+              111,
+              109,
+              34,
+              125,
+              44,
+              34,
+              97,
+              99,
+              99,
+              101,
+              115,
+              115,
+              84,
+              111,
+              107,
+              101,
+              110,
+              34,
+              58,
+              34,
+              101,
+              121,
+              74,
+              104,
+              98,
+              71,
+              99,
+              105,
+              79,
+              105,
+              74,
+              73,
+              85,
+              122,
+              73,
+              49,
+              78,
+              105,
+              73,
+              115,
+              73,
+              110,
+              82,
+              53,
+              99,
+              67,
+              73,
+              54,
+              73,
+              107,
+              112,
+              88,
+              86,
+              67,
+              74,
+              57,
+              46,
+              101,
+              121,
+              74,
+              112,
+              90,
+              67,
+              73,
+              54,
+              73,
+              106,
+              90,
+              104,
+              89,
+              106,
+              89,
+              50,
+              77,
+              71,
+              81,
+              53,
+              78,
+              68,
+              86,
+              108,
+              77,
+              122,
+              78,
+              106,
+              78,
+              122,
+              77,
+              119,
+              78,
+              71,
+              77,
+              120,
+              78,
+              109,
+              82,
+              108,
+              77,
+              67,
+              73,
+              115,
+              73,
+              110,
+              78,
+              108,
+              99,
+              51,
+              78,
+              112,
+              98,
+              50,
+              53,
+              74,
+              90,
+              67,
+              73,
+              54,
+              73,
+              106,
+              90,
+              104,
+              89,
+              106,
+              89,
+              51,
+              90,
+              68,
+              69,
+              119,
+              89,
+              122,
+              66,
+              109,
+              78,
+              122,
+              65,
+              53,
+              78,
+              87,
+              77,
+              53,
+              79,
+              71,
+              89,
+              121,
+              89,
+              109,
+              86,
+              108,
+              78,
+              121,
+              73,
+              115,
+              73,
+              109,
+              108,
+              104,
+              100,
+              67,
+              73,
+              54,
+              77,
+              84,
+              99,
+              53,
+              77,
+              68,
+              77,
+              48,
+              78,
+              68,
+              81,
+              50,
+              78,
+              67,
+              119,
+              105,
+              90,
+              88,
+              104,
+              119,
+              73,
+              106,
+              111,
+              120,
+              78,
+              122,
+              107,
+              119,
+              77,
+              122,
+              81,
+              49,
+              77,
+              122,
+              89,
+              48,
+              102,
+              81,
+              46,
+              108,
+              66,
+              57,
+              105,
+              79,
+              53,
+              102,
+              89,
+              70,
+              79,
+              104,
+              78,
+              77,
+              65,
+              99,
+              87,
+              86,
+              67,
+              119,
+              55,
+              88,
+              57,
+              66,
+              110,
+              100,
+              78,
+              95,
+              88,
+              72,
+              69,
+              122,
+              70,
+              108,
+              89,
+              95,
+              78,
+              118,
+              110,
+              89,
+              84,
+              118,
+              67,
+              119,
+              34,
+              125
+            ]
+          },
+          "cookie": [],
+          "responseTime": 1094,
+          "responseSize": 339
+        },
+        "id": "0429903e-e65f-438f-9493-63472e1f965b",
+        "assertions": [
+          {
+            "assertion": "Status code is 200",
+            "skipped": false
+          },
+          {
+            "assertion": "Login successful",
+            "skipped": false
+          },
+          {
+            "assertion": "Access token received",
+            "skipped": false
+          },
+          {
+            "assertion": "Response time under 3 seconds",
+            "skipped": false
+          }
+        ]
+      },
+      {
+        "cursor": {
+          "ref": "ef8410e8-86fd-4f62-ba4c-b7b90ad283fe",
+          "length": 10,
+          "cycles": 1,
+          "position": 3,
+          "iteration": 0,
+          "httpRequestId": "ef908c3c-a071-4000-b20c-b0a1960cba8f"
+        },
+        "item": {
+          "id": "b7f89e28-5663-4e2e-a250-f9f085f024d5",
+          "name": "TC010_Login_WrongPassword",
+          "request": {
+            "url": {
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"email\": \"{shrnktest.io@gmail.com}\",\r\n  \"password\": \"{wrongpassword}\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "3532268b-9ffe-4c3e-8ec1-9d075aed148d",
+                "type": "text/javascript",
+                "packages": {},
+                "exec": [
+                  "pm.test(\"Status code is 401\", () => {\r",
+                  "    pm.response.to.have.status(401);\r",
+                  "});\r",
+                  "\r",
+                  "const res = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Correct error message returned\", () => {\r",
+                  "    pm.expect(res.message).to.eql(\"invalid email or password \");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response time under 3 seconds\", () => {\r",
+                  "    pm.expect(pm.response.responseTime).to.be.below(3000);\r",
+                  "});"
+                ],
+                "_lastExecutionId": "d4c672a5-a993-4ded-a5f3-277e1aed80c1"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "https",
+            "path": [
+              "api",
+              "auth",
+              "login"
+            ],
+            "host": [
+              "dastavej-familyvault",
+              "onrender",
+              "com"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json",
+              "system": true
+            },
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.39.1",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "180f3cb7-087c-4779-886e-b7e73474d707",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "dastavej-familyvault.onrender.com",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            },
+            {
+              "key": "Content-Length",
+              "value": "77",
+              "system": true
+            },
+            {
+              "key": "Cookie",
+              "value": "refreshToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhYjY2MGQ5NDVlMzNjNzMwNGMxNmRlMCIsImlhdCI6MTc5MDM0NDQ2NCwiZXhwIjoxNzkwOTQ5MjY0fQ.991YmGYfoknK9YHY5vO_DqkItltu6GOMZQwZdNi_QCQ",
+              "system": true
+            }
+          ],
+          "method": "POST",
+          "body": {
+            "mode": "raw",
+            "raw": "{\r\n  \"email\": \"{shrnktest.io@gmail.com}\",\r\n  \"password\": \"{wrongpassword}\"\r\n}",
+            "options": {
+              "raw": {
+                "language": "json"
+              }
+            }
+          }
+        },
+        "response": {
+          "id": "317cb0bc-cadd-4623-85ee-6869e8503f7c",
+          "status": "Unauthorized",
+          "code": 401,
+          "header": [
+            {
+              "key": "Date",
+              "value": "Fri, 25 Sep 2026 13:54:25 GMT"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            },
+            {
+              "key": "Content-Length",
+              "value": "41"
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "access-control-allow-credentials",
+              "value": "true"
+            },
+            {
+              "key": "Content-Encoding",
+              "value": "br"
+            },
+            {
+              "key": "etag",
+              "value": "W/\"28-LzdaP1HS4BMgEiLH8AtezLwYjws\""
+            },
+            {
+              "key": "rndr-id",
+              "value": "27d9d2ed-7fb4-4391"
+            },
+            {
+              "key": "Server",
+              "value": "cloudflare"
+            },
+            {
+              "key": "vary",
+              "value": "Origin"
+            },
+            {
+              "key": "vary",
+              "value": "Accept-Encoding"
+            },
+            {
+              "key": "x-powered-by",
+              "value": "Express"
+            },
+            {
+              "key": "x-render-origin-server",
+              "value": "Render"
+            },
+            {
+              "key": "cf-cache-status",
+              "value": "DYNAMIC"
+            },
+            {
+              "key": "CF-RAY",
+              "value": "a40a854aee123750-DEL"
+            },
+            {
+              "key": "alt-svc",
+              "value": "h3=\":443\"; ma=86400"
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              123,
+              34,
+              109,
+              101,
+              115,
+              115,
+              97,
+              103,
+              101,
+              34,
+              58,
+              34,
+              105,
+              110,
+              118,
+              97,
+              108,
+              105,
+              100,
+              32,
+              101,
+              109,
+              97,
+              105,
+              108,
+              32,
+              111,
+              114,
+              32,
+              112,
+              97,
+              115,
+              115,
+              119,
+              111,
+              114,
+              100,
+              32,
+              34,
+              125
+            ]
+          },
+          "cookie": [],
+          "responseTime": 522,
+          "responseSize": 40
+        },
+        "id": "b7f89e28-5663-4e2e-a250-f9f085f024d5",
+        "assertions": [
+          {
+            "assertion": "Status code is 401",
+            "skipped": false
+          },
+          {
+            "assertion": "Correct error message returned",
+            "skipped": false
+          },
+          {
+            "assertion": "Response time under 3 seconds",
+            "skipped": false
+          }
+        ]
+      },
+      {
+        "cursor": {
+          "ref": "24eb5f9b-86c7-4cad-a49d-4e5afd8f3703",
+          "length": 10,
+          "cycles": 1,
+          "position": 4,
+          "iteration": 0,
+          "httpRequestId": "7403bb4d-6539-4a7d-a732-dc7678da87a3"
+        },
+        "item": {
+          "id": "9a26c907-26ad-49bc-ab8a-0ec8cdd1fe96",
+          "name": "TC011_Login_UnregisteredEmail",
+          "request": {
+            "url": {
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"email\": \"{shrnktestu.io@gmail.com}\",\r\n  \"password\": \"{test1234}\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "f646926e-d1a0-4671-9c44-bfd73ddb6f6e",
+                "type": "text/javascript",
+                "packages": {},
+                "exec": [
+                  "pm.test(\"Status code is 401\", () => {\r",
+                  "    pm.response.to.have.status(401);\r",
+                  "});\r",
+                  "\r",
+                  "const res = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Correct error message returned\", () => {\r",
+                  "    pm.expect(res.message).to.eql(\"invalid email or password \");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response time under 3 seconds\", () => {\r",
+                  "    pm.expect(pm.response.responseTime).to.be.below(3000);\r",
+                  "});"
+                ],
+                "_lastExecutionId": "9ed4cbd0-f0d8-4eb5-97cd-142eb776aa52"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "https",
+            "path": [
+              "api",
+              "auth",
+              "login"
+            ],
+            "host": [
+              "dastavej-familyvault",
+              "onrender",
+              "com"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json",
+              "system": true
+            },
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.39.1",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "d0d27726-d769-4c4f-8385-6e270ee92dfb",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "dastavej-familyvault.onrender.com",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            },
+            {
+              "key": "Content-Length",
+              "value": "73",
+              "system": true
+            },
+            {
+              "key": "Cookie",
+              "value": "refreshToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhYjY2MGQ5NDVlMzNjNzMwNGMxNmRlMCIsImlhdCI6MTc5MDM0NDQ2NCwiZXhwIjoxNzkwOTQ5MjY0fQ.991YmGYfoknK9YHY5vO_DqkItltu6GOMZQwZdNi_QCQ",
+              "system": true
+            }
+          ],
+          "method": "POST",
+          "body": {
+            "mode": "raw",
+            "raw": "{\r\n  \"email\": \"{shrnktestu.io@gmail.com}\",\r\n  \"password\": \"{test1234}\"\r\n}",
+            "options": {
+              "raw": {
+                "language": "json"
+              }
+            }
+          }
+        },
+        "response": {
+          "id": "03215e67-fd82-4f13-ac6c-3438f8652d18",
+          "status": "Unauthorized",
+          "code": 401,
+          "header": [
+            {
+              "key": "Date",
+              "value": "Fri, 25 Sep 2026 13:54:26 GMT"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            },
+            {
+              "key": "Content-Length",
+              "value": "41"
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "access-control-allow-credentials",
+              "value": "true"
+            },
+            {
+              "key": "Content-Encoding",
+              "value": "br"
+            },
+            {
+              "key": "etag",
+              "value": "W/\"28-LzdaP1HS4BMgEiLH8AtezLwYjws\""
+            },
+            {
+              "key": "rndr-id",
+              "value": "59e05e7b-9dc5-4603"
+            },
+            {
+              "key": "Server",
+              "value": "cloudflare"
+            },
+            {
+              "key": "vary",
+              "value": "Origin"
+            },
+            {
+              "key": "vary",
+              "value": "Accept-Encoding"
+            },
+            {
+              "key": "x-powered-by",
+              "value": "Express"
+            },
+            {
+              "key": "x-render-origin-server",
+              "value": "Render"
+            },
+            {
+              "key": "cf-cache-status",
+              "value": "DYNAMIC"
+            },
+            {
+              "key": "CF-RAY",
+              "value": "a40a854ef91d3750-DEL"
+            },
+            {
+              "key": "alt-svc",
+              "value": "h3=\":443\"; ma=86400"
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              123,
+              34,
+              109,
+              101,
+              115,
+              115,
+              97,
+              103,
+              101,
+              34,
+              58,
+              34,
+              105,
+              110,
+              118,
+              97,
+              108,
+              105,
+              100,
+              32,
+              101,
+              109,
+              97,
+              105,
+              108,
+              32,
+              111,
+              114,
+              32,
+              112,
+              97,
+              115,
+              115,
+              119,
+              111,
+              114,
+              100,
+              32,
+              34,
+              125
+            ]
+          },
+          "cookie": [],
+          "responseTime": 526,
+          "responseSize": 40
+        },
+        "id": "9a26c907-26ad-49bc-ab8a-0ec8cdd1fe96",
+        "assertions": [
+          {
+            "assertion": "Status code is 401",
+            "skipped": false
+          },
+          {
+            "assertion": "Correct error message returned",
+            "skipped": false
+          },
+          {
+            "assertion": "Response time under 3 seconds",
+            "skipped": false
+          }
+        ]
+      },
+      {
+        "cursor": {
+          "ref": "775b081e-3dff-417f-9206-0255638e09af",
+          "length": 10,
+          "cycles": 1,
+          "position": 5,
+          "iteration": 0,
+          "httpRequestId": "2ffca496-acd1-411c-a568-3d228bbc96b9"
+        },
+        "item": {
+          "id": "fd821efe-b3b4-42c4-a61a-9f6f968c31e5",
+          "name": "TC018_GetMe",
+          "request": {
+            "url": {
+              "path": [
+                "api",
+                "auth",
+                "getme"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "type": "string",
+                  "value": "{{accessToken}}",
+                  "key": "token"
+                }
+              ]
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "50cb3340-e30f-4f10-bd00-0c0bfa93b4b7",
+                "type": "text/javascript",
+                "packages": {},
+                "exec": [
+                  "pm.test(\"Status code is 200\", () => {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "const res = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"User object exists\", () => {\r",
+                  "    pm.expect(res.user).to.be.an(\"object\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Email matches logged in user\", () => {\r",
+                  "    pm.expect(res.user.email).to.eql(pm.environment.get(\"email\"));\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response time under 3 seconds\", () => {\r",
+                  "    pm.expect(pm.response.responseTime).to.be.below(3000);\r",
+                  "});"
+                ],
+                "_lastExecutionId": "027ac5e9-00df-46f7-9025-8b9534d98ce0"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "https",
+            "path": [
+              "api",
+              "auth",
+              "getme"
+            ],
+            "host": [
+              "dastavej-familyvault",
+              "onrender",
+              "com"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "Authorization",
+              "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhYjY2MGQ5NDVlMzNjNzMwNGMxNmRlMCIsInNlc3Npb25JZCI6IjZhYjY3ZDEwYzBmNzA5NWM5OGYyYmVlNyIsImlhdCI6MTc5MDM0NDQ2NCwiZXhwIjoxNzkwMzQ1MzY0fQ.lB9iO5fYFOhNMAcWVCw7X9BndN_XHEzFlY_NvnYTvCw",
+              "system": true
+            },
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.39.1",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "3203d5ce-3ee3-4351-8b0a-406d0a70b9f6",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "dastavej-familyvault.onrender.com",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            },
+            {
+              "key": "Cookie",
+              "value": "refreshToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhYjY2MGQ5NDVlMzNjNzMwNGMxNmRlMCIsImlhdCI6MTc5MDM0NDQ2NCwiZXhwIjoxNzkwOTQ5MjY0fQ.991YmGYfoknK9YHY5vO_DqkItltu6GOMZQwZdNi_QCQ",
+              "system": true
+            }
+          ],
+          "method": "GET",
+          "auth": {
+            "type": "bearer",
+            "bearer": [
+              {
+                "type": "string",
+                "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhYjY2MGQ5NDVlMzNjNzMwNGMxNmRlMCIsInNlc3Npb25JZCI6IjZhYjY3ZDEwYzBmNzA5NWM5OGYyYmVlNyIsImlhdCI6MTc5MDM0NDQ2NCwiZXhwIjoxNzkwMzQ1MzY0fQ.lB9iO5fYFOhNMAcWVCw7X9BndN_XHEzFlY_NvnYTvCw",
+                "key": "token"
+              }
+            ]
+          }
+        },
+        "response": {
+          "id": "34f80f40-0d05-41a5-8f56-85a37d0a0353",
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Date",
+              "value": "Fri, 25 Sep 2026 13:54:26 GMT"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            },
+            {
+              "key": "Content-Length",
+              "value": "84"
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "access-control-allow-credentials",
+              "value": "true"
+            },
+            {
+              "key": "Content-Encoding",
+              "value": "br"
+            },
+            {
+              "key": "etag",
+              "value": "W/\"66-MXGmT7/FtqzJqDUH00tyKtPClCc\""
+            },
+            {
+              "key": "rndr-id",
+              "value": "affa048f-8e7c-4402"
+            },
+            {
+              "key": "Server",
+              "value": "cloudflare"
+            },
+            {
+              "key": "vary",
+              "value": "Origin"
+            },
+            {
+              "key": "vary",
+              "value": "Accept-Encoding"
+            },
+            {
+              "key": "x-powered-by",
+              "value": "Express"
+            },
+            {
+              "key": "x-render-origin-server",
+              "value": "Render"
+            },
+            {
+              "key": "cf-cache-status",
+              "value": "DYNAMIC"
+            },
+            {
+              "key": "CF-RAY",
+              "value": "a40a8552cc923750-DEL"
+            },
+            {
+              "key": "alt-svc",
+              "value": "h3=\":443\"; ma=86400"
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              123,
+              34,
+              109,
+              101,
+              115,
+              115,
+              97,
+              103,
+              101,
+              34,
+              58,
+              34,
+              117,
+              115,
+              101,
+              114,
+              32,
+              102,
+              101,
+              116,
+              99,
+              104,
+              101,
+              100,
+              32,
+              115,
+              117,
+              99,
+              99,
+              101,
+              115,
+              115,
+              102,
+              117,
+              108,
+              108,
+              121,
+              34,
+              44,
+              34,
+              117,
+              115,
+              101,
+              114,
+              34,
+              58,
+              123,
+              34,
+              117,
+              115,
+              101,
+              114,
+              110,
+              97,
+              109,
+              101,
+              34,
+              58,
+              34,
+              116,
+              101,
+              115,
+              116,
+              49,
+              50,
+              51,
+              34,
+              44,
+              34,
+              101,
+              109,
+              97,
+              105,
+              108,
+              34,
+              58,
+              34,
+              115,
+              104,
+              114,
+              110,
+              107,
+              116,
+              101,
+              115,
+              116,
+              46,
+              105,
+              111,
+              64,
+              103,
+              109,
+              97,
+              105,
+              108,
+              46,
+              99,
+              111,
+              109,
+              34,
+              125,
+              125
+            ]
+          },
+          "cookie": [],
+          "responseTime": 549,
+          "responseSize": 102
+        },
+        "id": "fd821efe-b3b4-42c4-a61a-9f6f968c31e5",
+        "assertions": [
+          {
+            "assertion": "Status code is 200",
+            "skipped": false
+          },
+          {
+            "assertion": "User object exists",
+            "skipped": false
+          },
+          {
+            "assertion": "Email matches logged in user",
+            "skipped": false
+          },
+          {
+            "assertion": "Response time under 3 seconds",
+            "skipped": false
+          }
+        ]
+      },
+      {
+        "cursor": {
+          "ref": "66902a92-8f05-495d-b245-7206b5cc26db",
+          "length": 10,
+          "cycles": 1,
+          "position": 6,
+          "iteration": 0,
+          "httpRequestId": "dc1111d9-4546-4d7a-b774-06f97ce85ec1"
+        },
+        "item": {
+          "id": "c3aa5ba8-284f-48b1-81e0-4166aea71a48",
+          "name": "TC016_GetMe_NoToken",
+          "request": {
+            "url": {
+              "path": [
+                "api",
+                "auth",
+                "getme"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "method": "GET",
+            "auth": {
+              "type": "noauth",
+              "noauth": []
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "61d6ffae-fe22-47a6-963b-ed2a602241b6",
+                "type": "text/javascript",
+                "packages": {},
+                "exec": [
+                  "pm.test(\"Status code is 401\", () => {\r",
+                  "    pm.response.to.have.status(401);\r",
+                  "});\r",
+                  "\r",
+                  "const res = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Unauthorized message returned\", () => {\r",
+                  "    pm.expect(res.message).to.be.a(\"string\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response time under 3 seconds\", () => {\r",
+                  "    pm.expect(pm.response.responseTime).to.be.below(3000);\r",
+                  "});"
+                ],
+                "_lastExecutionId": "6e3155ed-71ea-460e-9425-702192121bdf"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "https",
+            "path": [
+              "api",
+              "auth",
+              "getme"
+            ],
+            "host": [
+              "dastavej-familyvault",
+              "onrender",
+              "com"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.39.1",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "f0988d75-f075-4fd1-a662-584671c0cd96",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "dastavej-familyvault.onrender.com",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            },
+            {
+              "key": "Cookie",
+              "value": "refreshToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhYjY2MGQ5NDVlMzNjNzMwNGMxNmRlMCIsImlhdCI6MTc5MDM0NDQ2NCwiZXhwIjoxNzkwOTQ5MjY0fQ.991YmGYfoknK9YHY5vO_DqkItltu6GOMZQwZdNi_QCQ",
+              "system": true
+            }
+          ],
+          "method": "GET",
+          "auth": {
+            "type": "noauth",
+            "noauth": []
+          }
+        },
+        "response": {
+          "id": "0c024107-bd74-4bf6-80de-f9610c7396de",
+          "status": "Unauthorized",
+          "code": 401,
+          "header": [
+            {
+              "key": "Date",
+              "value": "Fri, 25 Sep 2026 13:54:27 GMT"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            },
+            {
+              "key": "Content-Length",
+              "value": "32"
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "access-control-allow-credentials",
+              "value": "true"
+            },
+            {
+              "key": "Content-Encoding",
+              "value": "br"
+            },
+            {
+              "key": "etag",
+              "value": "W/\"1d-T1VactcDob6qEI9l1qS2biVl93w\""
+            },
+            {
+              "key": "rndr-id",
+              "value": "53e1d270-01af-43d8"
+            },
+            {
+              "key": "Server",
+              "value": "cloudflare"
+            },
+            {
+              "key": "vary",
+              "value": "Origin"
+            },
+            {
+              "key": "vary",
+              "value": "Accept-Encoding"
+            },
+            {
+              "key": "x-powered-by",
+              "value": "Express"
+            },
+            {
+              "key": "x-render-origin-server",
+              "value": "Render"
+            },
+            {
+              "key": "cf-cache-status",
+              "value": "DYNAMIC"
+            },
+            {
+              "key": "CF-RAY",
+              "value": "a40a8556f83e3750-DEL"
+            },
+            {
+              "key": "alt-svc",
+              "value": "h3=\":443\"; ma=86400"
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              123,
+              34,
+              109,
+              101,
+              115,
+              115,
+              97,
+              103,
+              101,
+              34,
+              58,
+              34,
+              116,
+              111,
+              107,
+              101,
+              110,
+              32,
+              110,
+              111,
+              116,
+              32,
+              102,
+              111,
+              117,
+              110,
+              100,
+              34,
+              125
+            ]
+          },
+          "cookie": [],
+          "responseTime": 301,
+          "responseSize": 29
+        },
+        "id": "c3aa5ba8-284f-48b1-81e0-4166aea71a48",
+        "assertions": [
+          {
+            "assertion": "Status code is 401",
+            "skipped": false
+          },
+          {
+            "assertion": "Unauthorized message returned",
+            "skipped": false
+          },
+          {
+            "assertion": "Response time under 3 seconds",
+            "skipped": false
+          }
+        ]
+      },
+      {
+        "cursor": {
+          "ref": "69ed98c7-0401-42ae-965a-02ea29b6ba0f",
+          "length": 10,
+          "cycles": 1,
+          "position": 7,
+          "iteration": 0,
+          "httpRequestId": "89229706-9ce4-4fb1-b9f3-61e0b2a08f43"
+        },
+        "item": {
+          "id": "eb4f2abc-c23b-4f49-b38a-233ab91bad73",
+          "name": "TC019_RefreshToken",
+          "request": {
+            "url": {
+              "path": [
+                "api",
+                "auth",
+                "refresh-token"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "method": "POST"
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "id": "cbf6ece5-7c06-4031-8685-e75a55f19845",
+                "type": "text/javascript",
+                "packages": {},
+                "exec": [
+                  ""
+                ],
+                "_lastExecutionId": "09011ee4-35b3-43da-88d4-a8a6acbc15d2"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "id": "a12b8c7d-fa3f-4b23-847e-fafa6ba09ff4",
+                "type": "text/javascript",
+                "packages": {},
+                "exec": [
+                  "pm.test(\"Status code is 200\", () => {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "const res = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"New access token received\", () => {\r",
+                  "    pm.expect(res.accessToken).to.be.a(\"string\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response time under 3 seconds\", () => {\r",
+                  "    pm.expect(pm.response.responseTime).to.be.below(3000);\r",
+                  "});\r",
+                  "\r",
+                  "// Update environment with fresh token\r",
+                  "pm.environment.set(\"accessToken\", res.accessToken);"
+                ],
+                "_lastExecutionId": "1a485eb4-2ffb-49da-91fa-0814b462c029"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "https",
+            "path": [
+              "api",
+              "auth",
+              "refresh-token"
+            ],
+            "host": [
+              "dastavej-familyvault",
+              "onrender",
+              "com"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.39.1",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "32016172-c04f-4593-8ac3-ae635be97c2f",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "dastavej-familyvault.onrender.com",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            },
+            {
+              "key": "Cookie",
+              "value": "refreshToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhYjY2MGQ5NDVlMzNjNzMwNGMxNmRlMCIsImlhdCI6MTc5MDM0NDQ2NCwiZXhwIjoxNzkwOTQ5MjY0fQ.991YmGYfoknK9YHY5vO_DqkItltu6GOMZQwZdNi_QCQ",
+              "system": true
+            },
+            {
+              "key": "Content-Length",
+              "value": "0",
+              "system": true
+            }
+          ],
+          "method": "POST"
+        },
+        "response": {
+          "id": "8017d755-61bf-40cd-9940-d1325e0bde5e",
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Date",
+              "value": "Fri, 25 Sep 2026 13:54:28 GMT"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            },
+            {
+              "key": "Content-Length",
+              "value": "261"
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "access-control-allow-credentials",
+              "value": "true"
+            },
+            {
+              "key": "Content-Encoding",
+              "value": "br"
+            },
+            {
+              "key": "etag",
+              "value": "W/\"140-7J/3uGyZgIdA09IXMlB9AxCselA\""
+            },
+            {
+              "key": "rndr-id",
+              "value": "1492a15c-ee1c-465c"
+            },
+            {
+              "key": "Server",
+              "value": "cloudflare"
+            },
+            {
+              "key": "Set-Cookie",
+              "value": "refreshToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhYjY2MGQ5NDVlMzNjNzMwNGMxNmRlMCIsImlhdCI6MTc5MDM0NDQ2OCwiZXhwIjoxNzkwOTQ5MjY4fQ.BO6idfYyomcpgjKwLrqnKXcqCqOi5U0dVuTL6792B9s; Max-Age=604800; Path=/; Expires=Fri, 02 Oct 2026 13:54:28 GMT; HttpOnly; Secure; SameSite=None"
+            },
+            {
+              "key": "vary",
+              "value": "Origin"
+            },
+            {
+              "key": "vary",
+              "value": "Accept-Encoding"
+            },
+            {
+              "key": "x-powered-by",
+              "value": "Express"
+            },
+            {
+              "key": "x-render-origin-server",
+              "value": "Render"
+            },
+            {
+              "key": "cf-cache-status",
+              "value": "DYNAMIC"
+            },
+            {
+              "key": "CF-RAY",
+              "value": "a40a8559cff33750-DEL"
+            },
+            {
+              "key": "alt-svc",
+              "value": "h3=\":443\"; ma=86400"
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              123,
+              34,
+              109,
+              101,
+              115,
+              115,
+              97,
+              103,
+              101,
+              34,
+              58,
+              34,
+              97,
+              99,
+              99,
+              101,
+              115,
+              115,
+              32,
+              116,
+              111,
+              107,
+              101,
+              110,
+              32,
+              114,
+              101,
+              102,
+              114,
+              101,
+              115,
+              104,
+              101,
+              100,
+              34,
+              44,
+              34,
+              97,
+              99,
+              99,
+              101,
+              115,
+              115,
+              84,
+              111,
+              107,
+              101,
+              110,
+              34,
+              58,
+              34,
+              101,
+              121,
+              74,
+              104,
+              98,
+              71,
+              99,
+              105,
+              79,
+              105,
+              74,
+              73,
+              85,
+              122,
+              73,
+              49,
+              78,
+              105,
+              73,
+              115,
+              73,
+              110,
+              82,
+              53,
+              99,
+              67,
+              73,
+              54,
+              73,
+              107,
+              112,
+              88,
+              86,
+              67,
+              74,
+              57,
+              46,
+              101,
+              121,
+              74,
+              112,
+              90,
+              67,
+              73,
+              54,
+              73,
+              106,
+              90,
+              104,
+              89,
+              106,
+              89,
+              50,
+              77,
+              71,
+              81,
+              53,
+              78,
+              68,
+              86,
+              108,
+              77,
+              122,
+              78,
+              106,
+              78,
+              122,
+              77,
+              119,
+              78,
+              71,
+              77,
+              120,
+              78,
+              109,
+              82,
+              108,
+              77,
+              67,
+              73,
+              115,
+              73,
+              109,
+              108,
+              104,
+              100,
+              67,
+              73,
+              54,
+              77,
+              84,
+              99,
+              53,
+              77,
+              68,
+              77,
+              48,
+              78,
+              68,
+              81,
+              50,
+              79,
+              67,
+              119,
+              105,
+              90,
+              88,
+              104,
+              119,
+              73,
+              106,
+              111,
+              120,
+              78,
+              122,
+              107,
+              119,
+              77,
+              122,
+              81,
+              49,
+              77,
+              122,
+              89,
+              52,
+              102,
+              81,
+              46,
+              116,
+              57,
+              51,
+              56,
+              113,
+              90,
+              109,
+              121,
+              99,
+              103,
+              95,
+              88,
+              117,
+              68,
+              45,
+              56,
+              103,
+              73,
+              69,
+              53,
+              79,
+              107,
+              88,
+              116,
+              108,
+              90,
+              111,
+              100,
+              85,
+              86,
+              105,
+              105,
+              67,
+              113,
+              77,
+              111,
+              51,
+              56,
+              67,
+              70,
+              106,
+              75,
+              115,
+              34,
+              44,
+              34,
+              117,
+              115,
+              101,
+              114,
+              34,
+              58,
+              123,
+              34,
+              95,
+              105,
+              100,
+              34,
+              58,
+              34,
+              54,
+              97,
+              98,
+              54,
+              54,
+              48,
+              100,
+              57,
+              52,
+              53,
+              101,
+              51,
+              51,
+              99,
+              55,
+              51,
+              48,
+              52,
+              99,
+              49,
+              54,
+              100,
+              101,
+              48,
+              34,
+              44,
+              34,
+              117,
+              115,
+              101,
+              114,
+              110,
+              97,
+              109,
+              101,
+              34,
+              58,
+              34,
+              116,
+              101,
+              115,
+              116,
+              49,
+              50,
+              51,
+              34,
+              44,
+              34,
+              101,
+              109,
+              97,
+              105,
+              108,
+              34,
+              58,
+              34,
+              115,
+              104,
+              114,
+              110,
+              107,
+              116,
+              101,
+              115,
+              116,
+              46,
+              105,
+              111,
+              64,
+              103,
+              109,
+              97,
+              105,
+              108,
+              46,
+              99,
+              111,
+              109,
+              34,
+              125,
+              125
+            ]
+          },
+          "cookie": [],
+          "responseTime": 1047,
+          "responseSize": 320
+        },
+        "id": "eb4f2abc-c23b-4f49-b38a-233ab91bad73",
+        "assertions": [
+          {
+            "assertion": "Status code is 200",
+            "skipped": false
+          },
+          {
+            "assertion": "New access token received",
+            "skipped": false
+          },
+          {
+            "assertion": "Response time under 3 seconds",
+            "skipped": false
+          }
+        ]
+      },
+      {
+        "cursor": {
+          "ref": "6c14a799-33ba-4b55-93eb-fd8121e03b7d",
+          "length": 10,
+          "cycles": 1,
+          "position": 8,
+          "iteration": 0,
+          "httpRequestId": "4a66c440-405c-4d5d-8902-a850679b4ac2"
+        },
+        "item": {
+          "id": "1fc2f7e8-cd68-4ab9-817a-437a42fd0ab0",
+          "name": "TC014_Logout",
+          "request": {
+            "url": {
+              "path": [
+                "api",
+                "auth",
+                "logout"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "method": "GET"
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "6fee6fc7-25e5-433d-8f7a-30e07305d784",
+                "type": "text/javascript",
+                "packages": {},
+                "exec": [
+                  "pm.test(\"Status code is 200\", () => {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "const res = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Logout successful\", () => {\r",
+                  "    pm.expect(res.message).to.eql(\"Logged Out Successfully\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response time under 3 seconds\", () => {\r",
+                  "    pm.expect(pm.response.responseTime).to.be.below(3000);\r",
+                  "});\r",
+                  "\r",
+                  "// Clear access token from environment\r",
+                  "pm.environment.unset(\"accessToken\");"
+                ],
+                "_lastExecutionId": "f85c10af-98b5-4a7e-be10-40270d5c4e82"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "https",
+            "path": [
+              "api",
+              "auth",
+              "logout"
+            ],
+            "host": [
+              "dastavej-familyvault",
+              "onrender",
+              "com"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.39.1",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "c17633d1-6ad3-48f7-8dff-ca5f8a32ebae",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "dastavej-familyvault.onrender.com",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            },
+            {
+              "key": "Cookie",
+              "value": "refreshToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhYjY2MGQ5NDVlMzNjNzMwNGMxNmRlMCIsImlhdCI6MTc5MDM0NDQ2OCwiZXhwIjoxNzkwOTQ5MjY4fQ.BO6idfYyomcpgjKwLrqnKXcqCqOi5U0dVuTL6792B9s",
+              "system": true
+            }
+          ],
+          "method": "GET"
+        },
+        "response": {
+          "id": "34977f63-8454-4ec8-b8c2-6f9501d7bd53",
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Date",
+              "value": "Fri, 25 Sep 2026 13:54:29 GMT"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            },
+            {
+              "key": "Content-Length",
+              "value": "41"
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "access-control-allow-credentials",
+              "value": "true"
+            },
+            {
+              "key": "Content-Encoding",
+              "value": "br"
+            },
+            {
+              "key": "etag",
+              "value": "W/\"25-MzPAfb6WbifpwdMFvLiKM5mwkaY\""
+            },
+            {
+              "key": "rndr-id",
+              "value": "c2f56463-609b-47e3"
+            },
+            {
+              "key": "Server",
+              "value": "cloudflare"
+            },
+            {
+              "key": "Set-Cookie",
+              "value": "refreshToken=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; Secure; SameSite=None"
+            },
+            {
+              "key": "vary",
+              "value": "Origin"
+            },
+            {
+              "key": "vary",
+              "value": "Accept-Encoding"
+            },
+            {
+              "key": "x-powered-by",
+              "value": "Express"
+            },
+            {
+              "key": "x-render-origin-server",
+              "value": "Render"
+            },
+            {
+              "key": "cf-cache-status",
+              "value": "DYNAMIC"
+            },
+            {
+              "key": "CF-RAY",
+              "value": "a40a85614d563750-DEL"
+            },
+            {
+              "key": "alt-svc",
+              "value": "h3=\":443\"; ma=86400"
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              123,
+              34,
+              109,
+              101,
+              115,
+              115,
+              97,
+              103,
+              101,
+              34,
+              58,
+              34,
+              76,
+              111,
+              103,
+              103,
+              101,
+              100,
+              32,
+              79,
+              117,
+              116,
+              32,
+              83,
+              117,
+              99,
+              99,
+              101,
+              115,
+              115,
+              102,
+              117,
+              108,
+              108,
+              121,
+              34,
+              125
+            ]
+          },
+          "cookie": [],
+          "responseTime": 787,
+          "responseSize": 37
+        },
+        "id": "1fc2f7e8-cd68-4ab9-817a-437a42fd0ab0",
+        "assertions": [
+          {
+            "assertion": "Status code is 200",
+            "skipped": false
+          },
+          {
+            "assertion": "Logout successful",
+            "skipped": false
+          },
+          {
+            "assertion": "Response time under 3 seconds",
+            "skipped": false
+          }
+        ]
+      },
+      {
+        "cursor": {
+          "ref": "ae58f3ab-e22c-463a-af94-e584ac79b73c",
+          "length": 10,
+          "cycles": 1,
+          "position": 9,
+          "iteration": 0,
+          "httpRequestId": "a9ee1d9f-7462-4733-bd60-4d9f200a7975"
+        },
+        "item": {
+          "id": "246754e1-5de9-4d56-b0e0-4b949a70bf35",
+          "name": "TC020_RefreshToken_Invalid",
+          "request": {
+            "url": {
+              "path": [
+                "api",
+                "auth",
+                "refresh-token"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "method": "POST"
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "id": "04bded01-675c-4216-8614-c4e6d1402c09",
+                "type": "text/javascript",
+                "packages": {},
+                "exec": [
+                  ""
+                ],
+                "_lastExecutionId": "c9e148c1-9137-480c-baf5-ec496ddfa2de"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "id": "bf13d7a4-bbf5-4e27-8fda-393dc50865e9",
+                "type": "text/javascript",
+                "packages": {},
+                "exec": [
+                  "pm.test(\"Status code is 401\", () => {\r",
+                  "    pm.response.to.have.status(401);\r",
+                  "});\r",
+                  "\r",
+                  "const res = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Refresh token rejected\", () => {\r",
+                  "    pm.expect(res.message).to.be.a(\"string\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response time under 3 seconds\", () => {\r",
+                  "    pm.expect(pm.response.responseTime).to.be.below(3000);\r",
+                  "});"
+                ],
+                "_lastExecutionId": "157b8d95-f9c4-492a-8cbc-5755729bcff0"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "https",
+            "path": [
+              "api",
+              "auth",
+              "refresh-token"
+            ],
+            "host": [
+              "dastavej-familyvault",
+              "onrender",
+              "com"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.39.1",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "1b65b661-6c88-4f53-9f23-10de9633eb9d",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "dastavej-familyvault.onrender.com",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            },
+            {
+              "key": "Content-Length",
+              "value": "0",
+              "system": true
+            }
+          ],
+          "method": "POST"
+        },
+        "response": {
+          "id": "0c7ce6be-62eb-4874-ab7c-6eab4b2081bd",
+          "status": "Unauthorized",
+          "code": 401,
+          "header": [
+            {
+              "key": "Date",
+              "value": "Fri, 25 Sep 2026 13:54:29 GMT"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            },
+            {
+              "key": "Content-Length",
+              "value": "43"
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "access-control-allow-credentials",
+              "value": "true"
+            },
+            {
+              "key": "Content-Encoding",
+              "value": "br"
+            },
+            {
+              "key": "etag",
+              "value": "W/\"2a-ZcWHRLSxvfqu3uGJa6FzgnWy/QE\""
+            },
+            {
+              "key": "rndr-id",
+              "value": "ca661b69-1d6c-4fc5"
+            },
+            {
+              "key": "Server",
+              "value": "cloudflare"
+            },
+            {
+              "key": "vary",
+              "value": "Origin"
+            },
+            {
+              "key": "vary",
+              "value": "Accept-Encoding"
+            },
+            {
+              "key": "x-powered-by",
+              "value": "Express"
+            },
+            {
+              "key": "x-render-origin-server",
+              "value": "Render"
+            },
+            {
+              "key": "cf-cache-status",
+              "value": "DYNAMIC"
+            },
+            {
+              "key": "CF-RAY",
+              "value": "a40a85670ec53750-DEL"
+            },
+            {
+              "key": "alt-svc",
+              "value": "h3=\":443\"; ma=86400"
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              123,
+              34,
+              109,
+              101,
+              115,
+              115,
+              97,
+              103,
+              101,
+              34,
+              58,
+              34,
+              114,
+              101,
+              102,
+              114,
+              101,
+              115,
+              104,
+              32,
+              116,
+              111,
+              107,
+              101,
+              110,
+              32,
+              110,
+              111,
+              116,
+              32,
+              102,
+              111,
+              117,
+              110,
+              100,
+              32,
+              112,
+              108,
+              122,
+              122,
+              34,
+              125
+            ]
+          },
+          "cookie": [],
+          "responseTime": 383,
+          "responseSize": 42
+        },
+        "id": "246754e1-5de9-4d56-b0e0-4b949a70bf35",
+        "assertions": [
+          {
+            "assertion": "Status code is 401",
+            "skipped": false
+          },
+          {
+            "assertion": "Refresh token rejected",
+            "skipped": false
+          },
+          {
+            "assertion": "Response time under 3 seconds",
+            "skipped": false
+          }
+        ]
+      }
+    ],
+    "transfers": {
+      "responseTotal": 1120
+    },
+    "failures": [],
+    "error": null
+  }
+}
