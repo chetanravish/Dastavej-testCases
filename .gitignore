@@ -13,7 +13,7 @@ tests/traces/
 .vscode/   
 playwright-report/ 
 test-results/  
-
+specs/
 .DS_Store
 Thumbs.db
 
