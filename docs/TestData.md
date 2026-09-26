@@ -4,8 +4,8 @@
 
 | Field | Value |
 |------|------|
-| Email | testuser@gmail.com |
-| Password | Test@123 |
+| Email | shrnktest.io@gmail.com |
+| Password | test1234 | 
 
 ## Invalid User
 

@@ -8,6 +8,15 @@ tests/screenshots/
 tests/videos/
 tests/traces/
 
+.github/agents/ 
+.playwright-mcp/
+.vscode/   
+playwright-report/ 
+test-results/  
+
+.DS_Store
+Thumbs.db
+
 .env
 .env.*
 
