@@ -7,7 +7,7 @@ blob-report/
 tests/screenshots/
 tests/videos/
 tests/traces/
-
+.github/workflows/
 .github/agents/ 
 .playwright-mcp/
 .vscode/   
