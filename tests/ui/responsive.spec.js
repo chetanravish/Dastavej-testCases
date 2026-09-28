@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
-import { HomePage } from './pages/HomePage.js';
-import { LoginPage } from './pages/LoginPage.js';
-import { RegisterPage } from './pages/RegisterPage.js';
+import { HomePage } from '../pages/HomePage.js';
+import { LoginPage } from '../pages/LoginPage.js';
+import { RegisterPage } from '../pages/RegisterPage.js';
 
 const viewports = [
   { name: 'desktop', width: 1280, height: 720 },

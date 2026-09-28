@@ -1,8 +1,8 @@
 import { test, expect } from '@playwright/test';
-import { HomePage } from './pages/HomePage.js';
-import { LoginPage } from './pages/LoginPage.js';
-import { DashboardPage } from './pages/DashboardPage.js';
-import { invalidUser, validUser } from './utils/testData.js';
+import { HomePage } from '../pages/HomePage.js';
+import { LoginPage } from '../pages/LoginPage.js';
+import { DashboardPage } from '../pages/DashboardPage.js';
+import { invalidUser, validUser } from '../utils/testData.js';
 
 test.describe('Authentication - Login', () => {
   test('logs in with valid credentials and shows the dashboard', async ({ page }) => {

@@ -1,8 +1,8 @@
 import { test, expect } from '@playwright/test';
-import { HomePage } from './pages/HomePage.js';
-import { LoginPage } from './pages/LoginPage.js';
-import { DashboardPage } from './pages/DashboardPage.js';
-import { APP_URL, validUser } from './utils/testData.js';
+import { HomePage } from '../pages/HomePage.js';
+import { LoginPage } from '../pages/LoginPage.js';
+import { DashboardPage } from '../pages/DashboardPage.js';
+import { APP_URL, validUser } from '../utils/testData.js';
 
 test.describe('Authentication - Protected Dashboard Access', () => {
   test('does not expose private dashboard controls anonymously', async ({ page }) => {

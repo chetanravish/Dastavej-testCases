@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
-import { HomePage } from './pages/HomePage.js';
-import { RegisterPage } from './pages/RegisterPage.js';
-import { uniqueRegistrationUser } from './utils/testData.js';
+import { HomePage } from '../pages/HomePage.js';
+import { RegisterPage } from '../pages/RegisterPage.js';
+import { uniqueRegistrationUser } from '../utils/testData.js';
 
 test.describe('Authentication - Registration', () => {
   test('registers a user and stops at the OTP screen', async ({ page }) => {

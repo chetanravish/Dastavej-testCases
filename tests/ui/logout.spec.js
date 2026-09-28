@@ -1,8 +1,8 @@
 import { test, expect } from '@playwright/test';
-import { HomePage } from './pages/HomePage.js';
-import { LoginPage } from './pages/LoginPage.js';
-import { DashboardPage } from './pages/DashboardPage.js';
-import { APP_URL, validUser } from './utils/testData.js';
+import { HomePage } from '../pages/HomePage.js';
+import { LoginPage } from '../pages/LoginPage.js';
+import { DashboardPage } from '../pages/DashboardPage.js';
+import { APP_URL, validUser } from '../utils/testData.js';
 
 test.describe('Authentication - Logout', () => {
   test('logs out and returns to the public landing page', async ({ page }) => {
