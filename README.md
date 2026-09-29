@@ -1,105 +1,457 @@
-# 📋 Dastavej-TestCases
+Dastavej — SDET Test Automation
 
-A professional **Software Development Engineer in Test (SDET)** portfolio project demonstrating **Manual Testing, API Testing, and UI Automation** for the **Dastavej** authentication module.
+End-to-end QA automation project for Dastavej, a digital document/family locker application.
 
-## Project Overview
 
-**Dastavej** is a secure digital document locker application built on the MERN stack. This repository contains complete QA deliverables created to validate its authentication system using an industry-standard SDET workflow.
 
-## Scope
 
-### Authentication Module
 
-* User Registration
-* Email OTP Verification *(Manual Dependency)*
-* Login
-* Logout
-* Protected Dashboard Access
-* JWT Authentication & Session Validation
+📌 Overview
 
-## Repository Structure
+This repository contains the software testing and test automation suite for Dastavej.
 
-```text
-Dastavej-TestCases/
-├── bug-reports/             # Defect reports
-├── docs/                    # Test Plan & Test Data
-├── evidence/                # Execution screenshots
-├── newman/                  # Newman regression reports
-├── postman/                 # Postman collection & environment
-├── test-cases/              # Manual test cases
-├── tests/                   # Playwright automation (JavaScript)
-│   ├── auth/
+The project follows a practical SDET workflow:
+
+Manual Testing → API Testing → UI Automation → CI/CD
+
+The current scope focuses primarily on authentication and session-management flows, with automated API regression, Playwright UI tests, test evidence, documentation, and continuous execution through GitHub Actions.
+
+🧪 Testing Scope
+
+User registration
+
+Existing-user registration validation
+
+Email and password validation
+
+OTP-related authentication scenarios
+
+User login
+
+Invalid credentials
+
+Unregistered-user login
+
+Protected API access
+
+Access-token refresh
+
+Logout
+
+Session persistence
+
+Browser back behavior after logout
+
+Protected-route behavior
+
+Responsive UI validation
+
+OTP scenarios requiring access to a real email inbox remain manual because the production OTP flow depends on email delivery.
+
+1. Manual Testing
+
+The authentication flow was manually tested using 20 documented test cases.
+
+Artifacts:
+
+test-cases/
+└── Dastavej_Auth_TestCases_Professional.xlsx
+
+docs/
+├── TestPlan.md
+└── TestData.md
+
+bug-reports/
+└── Bug_Report_Authentication_v2.xlsx
+
+evidence/
+└── authentication/
+    ├── TC001_Pass.png
+    ├── TC002_Pass.png
+    └── ...
+
+The executed authentication suite passed without requiring a functional bug report.
+
+2. API Testing — Postman & Newman
+
+API regression testing is implemented with Postman and executed from the command line using Newman.
+
+Current automated coverage
+
+10 API requests
+
+34 assertions
+
+Positive and negative authentication scenarios
+
+Protected endpoint validation
+
+Refresh-token validation
+
+Logout validation
+
+Main endpoints
+
+Method
+
+Endpoint
+
+Purpose
+
+POST
+
+/api/auth/register
+
+User registration
+
+POST
+
+/api/auth/login
+
+User login
+
+GET
+
+/api/auth/getme
+
+Protected user information
+
+POST
+
+/api/auth/refresh-token
+
+Access-token refresh
+
+GET
+
+/api/auth/logout
+
+Logout
+
+Run API regression locally
+
+.\newman\run_newman.bat
+
+Sensitive login credentials are supplied at runtime rather than stored in the committed Postman environment.
+
+3. UI Automation — Playwright
+
+UI automation is built with Playwright and uses the Page Object Model.
+
+tests/
+├── api/
+├── pages/
+│   ├── DashboardPage.js
+│   ├── HomePage.js
+│   └── LoginPage.js
+├── ui/
+│   ├── login.spec.js
+│   ├── logout.spec.js
+│   ├── protected-route.spec.js
+│   ├── register.spec.js
+│   └── responsive.spec.js
+└── utils/
+
+Run UI tests
+
+npx playwright test
+
+View the report
+
+npx playwright show-report
+
+🔐 Test Data & Secrets
+
+Production/test login credentials are not hardcoded in the repository.
+
+Local execution uses:
+
+TEST_USER_EMAIL
+TEST_USER_PASSWORD
+
+GitHub Actions receives these values through repository secrets.
+
+The committed Postman environment contains no real login credentials.
+
+⚙️ CI/CD — GitHub Actions
+
+The complete regression pipeline runs automatically through GitHub Actions.
+
+Git Push / Pull Request
+        ↓
+Checkout Repository
+        ↓
+Setup Node.js
+        ↓
+Install Dependencies
+        ↓
+Install Playwright Browsers
+        ↓
+Newman API Regression
+        ↓
+Playwright UI Tests
+        ↓
+Upload Playwright Report
+        ↓
+Pass / Fail
+
+Workflow:
+
+.github/
+└── workflows/
+    └── tests.yml
+
+The workflow runs for pushes to main and pull requests targeting main.
+
+📊 Latest Automation Result
+
+Latest successful Newman run:
+
+Requests:             10
+Failed requests:       0
+
+Test scripts:         10
+Failed test scripts:   0
+
+Assertions:           34
+Failed assertions:     0
+
+Average API response time during that run:
+
+844 ms
+
+Playwright UI tests also passed locally, and the GitHub Actions workflow completed successfully with the Playwright report uploaded as an artifact.
+
+📁 Repository Structure
+
+Dastavej-testCases/
+│
+├── .github/
+│   ├── agents/
+│   └── workflows/
+│       └── tests.yml
+│
+├── bug-reports/
+├── docs/
+├── evidence/
+│   └── authentication/
+│
+├── newman/
+│   ├── reports/
+│   └── run_newman.bat
+│
+├── postman/
+│   ├── collections/
+│   └── environments/
+│
+├── test-cases/
+├── tests/
+│   ├── api/
 │   ├── pages/
+│   ├── ui/
 │   └── utils/
+│
 ├── .gitignore
 ├── package.json
-├── playwright.config.js
-└── README.md
-```
+├── package-lock.json
+└── playwright.config.js
 
-## Testing Deliverables
+🛠️ Technology Stack
 
-| Deliverable                   | Status          |
-| ----------------------------- | --------------- |
-| Test Plan                     | ✅ Completed     |
-| Test Data                     | ✅ Completed     |
-| Manual Test Cases             | ✅ 20 Test Cases |
-| Execution Evidence            | ✅ Available     |
-| Bug Reports                   | 🔄 In Progress  |
-| API Testing (Postman)         | ✅ Completed     |
-| API Regression (Newman)       | ✅ Completed     |
-| UI Automation (Playwright JS) | ✅ Completed     |
-| HTML Test Report              | ✅ Generated     |
-| CI/CD (GitHub Actions)        | ⏳ Planned       |
+Area
 
-## Manual Testing Summary
+Technology
 
-| Metric           |    Value |
-| ---------------- | -------: |
-| Total Test Cases |       20 |
-| Executed         |       20 |
-| Passed           |       20 |
-| Failed           |        0 |
-| Pass Rate        | **100%** |
+Application
 
-## Playwright Automation Summary
+Dastavej
 
-| Metric         |             Value |
-| -------------- | ----------------: |
-| Total UI Tests |                17 |
-| Passed         |            **16** |
-| Skipped        |             **1** |
-| Failed         |             **0** |
-| Framework      | Page Object Model |
-| Language       |        JavaScript |
+Frontend
 
-> **Note:** One test is intentionally skipped in the production environment because the Vercel deployment does not rewrite SPA routes (`/dashboard`) after browser reload. This is a deployment limitation rather than an application authentication defect.
+React / Vite
 
-## Tools & Technologies
+Backend
 
-* **Manual Testing**
-* **Microsoft Excel**
-* **Postman**
-* **Newman**
-* **Playwright (JavaScript)**
-* **Git & GitHub**
-* **VS Code**
+Node.js / Express
 
-## SDET Workflow
+Database
 
-* ✅ Requirement Analysis
-* ✅ Test Planning
-* ✅ Test Data Preparation
-* ✅ Manual Test Execution
-* ✅ API Testing with Postman
-* ✅ API Regression using Newman
-* ✅ UI Automation with Playwright
-* ⏳ CI/CD using GitHub Actions
+MongoDB
 
-## Goal
+API Testing
 
-The objective of this repository is to demonstrate a complete **SDET workflow** by combining manual testing, API validation, regression testing, UI automation, defect reporting, and continuous integration on a real-world MERN application.
+Postman
 
----
+API CLI Runner
 
-**Author:** Chetan Ravish
+Newman
+
+UI Automation
+
+Playwright
+
+Language
+
+JavaScript
+
+Test Architecture
+
+Page Object Model
+
+CI/CD
+
+GitHub Actions
+
+API Deployment
+
+Render
+
+Web Deployment
+
+Vercel
+
+🚀 Getting Started
+
+Prerequisites
+
+Node.js
+
+npm
+
+Git
+
+Clone
+
+git clone https://github.com/chetanravish/Dastavej-testCases.git
+cd Dastavej-testCases
+
+Install dependencies
+
+npm ci
+
+Configure local credentials
+
+Create .env in the project root:
+
+TEST_USER_EMAIL=your_verified_test_email
+TEST_USER_PASSWORD=your_test_password
+
+.env is ignored by Git.
+
+Run Playwright
+
+npx playwright test
+
+Run Newman
+
+Set the required credentials in the current shell and run:
+
+.\newman\run_newman.bat
+
+🧠 SDET Practices Demonstrated
+
+Manual test case design
+
+Positive and negative testing
+
+Authentication testing
+
+API functional testing
+
+API regression automation
+
+UI automation
+
+Page Object Model
+
+Test data management
+
+Environment variables
+
+Secret management
+
+CLI test execution
+
+Test reporting
+
+CI/CD integration
+
+Git/GitHub workflow
+
+Regression testing
+
+Responsive UI validation
+
+📈 Automation Architecture
+
+                    Dastavej Application
+                           │
+              ┌────────────┴────────────┐
+              │                         │
+             APIs                       UI
+              │                         │
+        Postman/Newman             Playwright
+              │                         │
+              └────────────┬────────────┘
+                           │
+                     Regression
+                           │
+                    GitHub Actions
+                           │
+                  Reports / Results
+
+📌 Project Status
+
+Completed
+
+Manual authentication test suite
+
+Test evidence
+
+Test plan
+
+Test data documentation
+
+Postman API collection
+
+Newman CLI execution
+
+API regression assertions
+
+Playwright UI automation
+
+Page Object Model
+
+Environment-based test credentials
+
+GitHub Secrets
+
+GitHub Actions CI pipeline
+
+Playwright CI artifact reporting
+
+Future Improvements
+
+Cross-browser execution
+
+Additional API coverage
+
+More negative UI scenarios
+
+Accessibility testing
+
+Visual regression testing
+
+Test tagging and selective execution
+
+Expanded reporting and historical test metrics
+
+👨‍💻 Author
+
+Chetan Ravish
+
+This project is part of my SDET / Test Automation portfolio and demonstrates the progression from manual QA to automated API, UI, and CI/CD testing.
+
+📄 License
+
+This project is intended for learning, portfolio, and demonstration purposes.
