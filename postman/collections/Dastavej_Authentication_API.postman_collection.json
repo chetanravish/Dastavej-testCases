@@ -154,45 +154,12 @@
           "name": "TC009_Login_Valid",
           "event": [
             {
-              "listen": "prerequest",
-              "script": {
-                "exec": [
-                  "pm.environment.set(\"email\", \"shrnktest.io@gmail.com\");\r",
-                  "pm.environment.set(\"password\", \"test1234\");"
-                ],
-                "type": "text/javascript",
-                "packages": {},
-                "requests": {}
-              }
-            },
-            {
               "listen": "test",
               "script": {
-                "exec": [
-                  "pm.test(\"Status code is 200\", () => {\r",
-                  "    pm.response.to.have.status(200);\r",
-                  "});\r",
-                  "\r",
-                  "const res = pm.response.json();\r",
-                  "\r",
-                  "pm.test(\"Login successful\", () => {\r",
-                  "    pm.expect(res.message).to.eql(\"Logged In Successfully\");\r",
-                  "});\r",
-                  "\r",
-                  "pm.test(\"Access token received\", () => {\r",
-                  "    pm.expect(res.accessToken).to.be.a(\"string\");\r",
-                  "});\r",
-                  "\r",
-                  "pm.test(\"Response time under 3 seconds\", () => {\r",
-                  "    pm.expect(pm.response.responseTime).to.be.below(3000);\r",
-                  "});\r",
-                  "\r",
-                  "// Save token for next requests\r",
-                  "pm.environment.set(\"accessToken\", res.accessToken);"
-                ],
                 "type": "text/javascript",
-                "packages": {},
-                "requests": {}
+                "exec": [
+                  "pm.test(\"Status code is 200\", () => {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\nconst res = pm.response.json();\r\n\r\npm.test(\"Login successful\", () => {\r\n    pm.expect(res.message).to.eql(\"Logged In Successfully\");\r\n});\r\n\r\npm.test(\"Access token received\", () => {\r\n    pm.expect(res.accessToken).to.be.a(\"string\");\r\n});\r\n\r\npm.test(\"Response time under 3 seconds\", () => {\r\n    pm.expect(pm.response.responseTime).to.be.below(3000);\r\n});\r\n\r\n// Save token for next requests\r\npm.environment.set(\"accessToken\", res.accessToken);"
+                ]
               }
             }
           ],
@@ -201,7 +168,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n  \"email\": \"{{email}}\",\r\n  \"password\": \"{{password}}\"\r\n}",
+              "raw": "{\r\n  \"email\": \"{{loginemail}}\",\r\n  \"password\": \"{{loginpassword}}\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -228,24 +195,10 @@
             {
               "listen": "test",
               "script": {
-                "exec": [
-                  "pm.test(\"Status code is 401\", () => {\r",
-                  "    pm.response.to.have.status(401);\r",
-                  "});\r",
-                  "\r",
-                  "const res = pm.response.json();\r",
-                  "\r",
-                  "pm.test(\"Correct error message returned\", () => {\r",
-                  "    pm.expect(res.message).to.eql(\"invalid email or password \");\r",
-                  "});\r",
-                  "\r",
-                  "pm.test(\"Response time under 3 seconds\", () => {\r",
-                  "    pm.expect(pm.response.responseTime).to.be.below(3000);\r",
-                  "});"
-                ],
                 "type": "text/javascript",
-                "packages": {},
-                "requests": {}
+                "exec": [
+                  "pm.test(\"Status code is 401\", () => {\r\n    pm.response.to.have.status(401);\r\n});\r\n\r\nconst res = pm.response.json();\r\n\r\npm.test(\"Correct error message returned\", () => {\r\n    pm.expect(res.message).to.eql(\"invalid email or password \");\r\n});\r\n\r\npm.test(\"Response time under 3 seconds\", () => {\r\n    pm.expect(pm.response.responseTime).to.be.below(3000);\r\n});"
+                ]
               }
             }
           ],
@@ -254,7 +207,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n  \"email\": \"{shrnktest.io@gmail.com}\",\r\n  \"password\": \"{wrongpassword}\"\r\n}",
+              "raw": "{\r\n  \"email\": \"{{loginemail}}\",\r\n  \"password\": \"{{wrongpassword}}\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -281,24 +234,10 @@
             {
               "listen": "test",
               "script": {
-                "exec": [
-                  "pm.test(\"Status code is 401\", () => {\r",
-                  "    pm.response.to.have.status(401);\r",
-                  "});\r",
-                  "\r",
-                  "const res = pm.response.json();\r",
-                  "\r",
-                  "pm.test(\"Correct error message returned\", () => {\r",
-                  "    pm.expect(res.message).to.eql(\"invalid email or password \");\r",
-                  "});\r",
-                  "\r",
-                  "pm.test(\"Response time under 3 seconds\", () => {\r",
-                  "    pm.expect(pm.response.responseTime).to.be.below(3000);\r",
-                  "});"
-                ],
                 "type": "text/javascript",
-                "packages": {},
-                "requests": {}
+                "exec": [
+                  "pm.test(\"Status code is 401\", () => {\r\n    pm.response.to.have.status(401);\r\n});\r\n\r\nconst res = pm.response.json();\r\n\r\npm.test(\"Correct error message returned\", () => {\r\n    pm.expect(res.message).to.eql(\"invalid email or password \");\r\n});\r\n\r\npm.test(\"Response time under 3 seconds\", () => {\r\n    pm.expect(pm.response.responseTime).to.be.below(3000);\r\n});"
+                ]
               }
             }
           ],
@@ -307,7 +246,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n  \"email\": \"{shrnktestu.io@gmail.com}\",\r\n  \"password\": \"{test1234}\"\r\n}",
+              "raw": "{\r\n  \"email\": \"{{unregisteredemail}}\",\r\n  \"password\": \"{{loginpassword}}\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -346,7 +285,7 @@
                   "});\r",
                   "\r",
                   "pm.test(\"Email matches logged in user\", () => {\r",
-                  "    pm.expect(res.user.email).to.eql(pm.environment.get(\"email\"));\r",
+                  "    pm.expect(res.user.email).to.eql(pm.environment.get(\"loginemail\"));\r",
                   "});\r",
                   "\r",
                   "pm.test(\"Response time under 3 seconds\", () => {\r",

@@ -13,5 +13,8 @@
     "@types/node": "^26.6.2",
     "newman": "^6.2.2",
     "newman-reporter-htmlextra": "^1.23.1"
+  },
+  "dependencies": {
+    "dotenv": "^18.0.4"
   }
 }

@@ -2,12 +2,12 @@ export const APP_URL = 'https://dastavej-family-vault.vercel.app';
 export const API_URL = 'https://dastavej-familyvault.onrender.com'
 
 export const validUser = {
-  email: 'shrnktest.io@gmail.com',
-  password: 'test1234',
+  email: process.env.TEST_USER_EMAIL,
+  password: process.env.TEST_USER_PASSWORD,
 };
 
 export const invalidPassword = {
-  email: 'shrnktest.io@gmail.com',
+  email: process.env.TEST_USER_EMAIL,
   password: 'Wrong@123',
 };
 

@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 import { HomePage } from '../pages/HomePage.js';
 import { LoginPage } from '../pages/LoginPage.js';
 import { DashboardPage } from '../pages/DashboardPage.js';
-import { invalidUser, validUser } from '../utils/testData.js';
+import { unregisteredUser, validUser } from '../utils/testData.js';
 
 test.describe('Authentication - Login', () => {
   test('logs in with valid credentials and shows the dashboard', async ({ page }) => {
@@ -23,7 +23,7 @@ test.describe('Authentication - Login', () => {
     const login = new LoginPage(page);
 
     await home.openLogin();
-    await login.login(invalidUser.email, invalidUser.password);
+    await login.login(unregisteredUser.email, unregisteredUser.password);
 
     await expect(page).toHaveURL(/\?auth=login$/);
     await login.expectInvalidCredentialsError();
